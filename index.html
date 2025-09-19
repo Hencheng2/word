@@ -22,6 +22,29 @@
             overflow: hidden;
         }
 
+        /* Back Button */
+        .back-button {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            z-index: 3000;
+            background-color: #152420;
+            color: #d85a1b;
+            border: 1px solid #2a4a3c;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #2d3e33;
+        }
+
         /* Title Bar */
         .title-bar {
             background-color: #152420;
@@ -71,6 +94,7 @@
             height: 30px;
             align-items: center;
             border-bottom: 1px solid #2a4a3c;
+            flex-wrap: wrap;
         }
 
         .menu-item {
@@ -99,6 +123,7 @@
             gap: 15px;
             border-bottom: 1px solid #2a4a3c;
             min-height: 120px;
+            overflow-x: auto;
         }
 
         .ribbon-section {
@@ -123,6 +148,7 @@
         .ribbon-buttons {
             display: flex;
             gap: 5px;
+            flex-wrap: wrap;
         }
 
         .ribbon-button {
@@ -172,6 +198,7 @@
             color: #e0e0e0;
             padding: 4px;
             border-radius: 3px;
+            max-width: 120px;
         }
 
         /* Editor Area */
@@ -310,6 +337,7 @@
             border: 1px solid #3a5545;
             border-radius: 8px;
             width: 400px;
+            max-width: 90vw;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
@@ -390,6 +418,7 @@
             display: none;
             width: 100%;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .ribbon-tab.active {
@@ -464,9 +493,58 @@
         .template:hover {
             border-color: #d85a1b;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .ribbon {
+                min-height: 150px;
+            }
+            
+            .ribbon-section {
+                min-width: 180px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .menu-bar {
+                height: auto;
+                min-height: 30px;
+            }
+            
+            .ribbon {
+                min-height: 200px;
+            }
+            
+            #content {
+                width: 100%;
+                padding: 0.5in;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .ribbon {
+                min-height: 250px;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                height: auto;
+                padding: 5px;
+                gap: 5px;
+            }
+            
+            .status-items {
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Back Button -->
+    <a href="https://hencheng2.github.io/all/" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+    </a>
+
     <!-- Title Bar -->
     <div class="title-bar">
         <div class="document-name">
@@ -518,19 +596,19 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Clipboard</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Paste">
+                        <button class="ribbon-button" title="Paste" onclick="formatText('paste')">
                             <i class="fas fa-paste"></i>
                             <span class="ribbon-button-text">Paste</span>
                         </button>
-                        <button class="ribbon-button" title="Cut">
+                        <button class="ribbon-button" title="Cut" onclick="formatText('cut')">
                             <i class="fas fa-cut"></i>
                             <span class="ribbon-button-text">Cut</span>
                         </button>
-                        <button class="ribbon-button" title="Copy">
+                        <button class="ribbon-button" title="Copy" onclick="formatText('copy')">
                             <i class="fas fa-copy"></i>
                             <span class="ribbon-button-text">Copy</span>
                         </button>
-                        <button class="ribbon-button" title="Format Painter">
+                        <button class="ribbon-button" title="Format Painter" onclick="alert('Format Painter activated. Click on text to apply formatting.')">
                             <i class="fas fa-paint-brush"></i>
                             <span class="ribbon-button-text">Format Painter</span>
                         </button>
@@ -543,13 +621,15 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Font</div>
                     <div class="ribbon-buttons">
-                        <select id="font-family">
+                        <select id="font-family" onchange="formatText('fontName', this.value)">
                             <option value="Arial">Arial</option>
                             <option value="Times New Roman">Times New Roman</option>
                             <option value="Courier New">Courier New</option>
                             <option value="Calibri" selected>Calibri</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Verdana">Verdana</option>
                         </select>
-                        <select id="font-size">
+                        <select id="font-size" onchange="formatText('fontSize', this.value)">
                             <option value="1">8</option>
                             <option value="2">10</option>
                             <option value="3" selected>12</option>
@@ -600,10 +680,10 @@
                         <button class="ribbon-button" onclick="formatText('insertOrderedList')" title="Numbered List">
                             <i class="fas fa-list-ol"></i>
                         </button>
-                        <button class="ribbon-button" title="Decrease Indent">
+                        <button class="ribbon-button" onclick="formatText('outdent')" title="Decrease Indent">
                             <i class="fas fa-outdent"></i>
                         </button>
-                        <button class="ribbon-button" title="Increase Indent">
+                        <button class="ribbon-button" onclick="formatText('indent')" title="Increase Indent">
                             <i class="fas fa-indent"></i>
                         </button>
                     </div>
@@ -615,19 +695,19 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Styles</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Normal">
+                        <button class="ribbon-button" onclick="applyStyle('normal')" title="Normal">
                             <i class="fas fa-paragraph"></i>
                             <span class="ribbon-button-text">Normal</span>
                         </button>
-                        <button class="ribbon-button" title="Heading 1">
+                        <button class="ribbon-button" onclick="applyStyle('heading1')" title="Heading 1">
                             <i class="fas fa-heading"></i>
                             <span class="ribbon-button-text">Heading 1</span>
                         </button>
-                        <button class="ribbon-button" title="Heading 2">
+                        <button class="ribbon-button" onclick="applyStyle('heading2')" title="Heading 2">
                             <i class="fas fa-heading"></i>
                             <span class="ribbon-button-text">Heading 2</span>
                         </button>
-                        <button class="ribbon-button" title="Title">
+                        <button class="ribbon-button" onclick="applyStyle('title')" title="Title">
                             <i class="fas fa-heading"></i>
                             <span class="ribbon-button-text">Title</span>
                         </button>
@@ -643,15 +723,15 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Pages</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Cover Page">
+                        <button class="ribbon-button" title="Cover Page" onclick="insertCoverPage()">
                             <i class="fas fa-file-alt"></i>
                             <span class="ribbon-button-text">Cover Page</span>
                         </button>
-                        <button class="ribbon-button" title="Blank Page">
+                        <button class="ribbon-button" title="Blank Page" onclick="insertBlankPage()">
                             <i class="fas fa-plus-square"></i>
                             <span class="ribbon-button-text">Blank Page</span>
                         </button>
-                        <button class="ribbon-button" title="Page Break">
+                        <button class="ribbon-button" title="Page Break" onclick="formatText('insertHorizontalRule')">
                             <i class="fas fa-level-down-alt"></i>
                             <span class="ribbon-button-text">Page Break</span>
                         </button>
@@ -677,19 +757,19 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Illustrations</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Pictures">
+                        <button class="ribbon-button" title="Pictures" onclick="insertImage()">
                             <i class="fas fa-image"></i>
                             <span class="ribbon-button-text">Pictures</span>
                         </button>
-                        <button class="ribbon-button" title="Shapes">
+                        <button class="ribbon-button" title="Shapes" onclick="showShapesMenu()">
                             <i class="fas fa-square"></i>
                             <span class="ribbon-button-text">Shapes</span>
                         </button>
-                        <button class="ribbon-button" title="Icons">
+                        <button class="ribbon-button" title="Icons" onclick="showIconsMenu()">
                             <i class="fas fa-icons"></i>
                             <span class="ribbon-button-text">Icons</span>
                         </button>
-                        <button class="ribbon-button" title="Charts">
+                        <button class="ribbon-button" title="Charts" onclick="showChartsMenu()">
                             <i class="fas fa-chart-bar"></i>
                             <span class="ribbon-button-text">Charts</span>
                         </button>
@@ -702,7 +782,7 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Comments</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="New Comment">
+                        <button class="ribbon-button" title="New Comment" onclick="insertComment()">
                             <i class="fas fa-comment"></i>
                             <span class="ribbon-button-text">Comment</span>
                         </button>
@@ -715,15 +795,15 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Header & Footer</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Header">
+                        <button class="ribbon-button" title="Header" onclick="insertHeader()">
                             <i class="fas fa-heading"></i>
                             <span class="ribbon-button-text">Header</span>
                         </button>
-                        <button class="ribbon-button" title="Footer">
+                        <button class="ribbon-button" title="Footer" onclick="insertFooter()">
                             <i class="fas fa-window-minimize"></i>
                             <span class="ribbon-button-text">Footer</span>
                         </button>
-                        <button class="ribbon-button" title="Page Number">
+                        <button class="ribbon-button" title="Page Number" onclick="insertPageNumber()">
                             <i class="fas fa-list-ol"></i>
                             <span class="ribbon-button-text">Page Number</span>
                         </button>
@@ -739,15 +819,15 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Page Setup</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Margins">
+                        <button class="ribbon-button" title="Margins" onclick="showMarginsMenu()">
                             <i class="fas fa-border-all"></i>
                             <span class="ribbon-button-text">Margins</span>
                         </button>
-                        <button class="ribbon-button" title="Orientation">
+                        <button class="ribbon-button" title="Orientation" onclick="toggleOrientation()">
                             <i class="fas fa-compress-alt"></i>
                             <span class="ribbon-button-text">Orientation</span>
                         </button>
-                        <button class="ribbon-button" title="Size">
+                        <button class="ribbon-button" title="Size" onclick="showPageSizeMenu()">
                             <i class="fas fa-arrows-alt-h"></i>
                             <span class="ribbon-button-text">Size</span>
                         </button>
@@ -760,19 +840,19 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Paragraph</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Indent Left">
+                        <button class="ribbon-button" onclick="adjustIndent('decrease')" title="Indent Left">
                             <i class="fas fa-outdent"></i>
                             <span class="ribbon-button-text">Indent Left</span>
                         </button>
-                        <button class="ribbon-button" title="Indent Right">
+                        <button class="ribbon-button" onclick="adjustIndent('increase')" title="Indent Right">
                             <i class="fas fa-outdent fa-flip-horizontal"></i>
                             <span class="ribbon-button-text">Indent Right</span>
                         </button>
-                        <button class="ribbon-button" title="Spacing Before">
+                        <button class="ribbon-button" onclick="adjustSpacing('before')" title="Spacing Before">
                             <i class="fas fa-arrows-alt-v"></i>
                             <span class="ribbon-button-text">Spacing Before</span>
                         </button>
-                        <button class="ribbon-button" title="Spacing After">
+                        <button class="ribbon-button" onclick="adjustSpacing('after')" title="Spacing After">
                             <i class="fas fa-arrows-alt-v"></i>
                             <span class="ribbon-button-text">Spacing After</span>
                         </button>
@@ -785,19 +865,19 @@
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Arrange</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Bring Forward">
+                        <button class="ribbon-button" title="Bring Forward" onclick="arrangeObject('forward')">
                             <i class="fas fa-arrow-up"></i>
                             <span class="ribbon-button-text">Bring Forward</span>
                         </button>
-                        <button class="ribbon-button" title="Send Backward">
+                        <button class="ribbon-button" title="Send Backward" onclick="arrangeObject('backward')">
                             <i class="fas fa-arrow-down"></i>
                             <span class="ribbon-button-text">Send Backward</span>
                         </button>
-                        <button class="ribbon-button" title="Wrap Text">
+                        <button class="ribbon-button" title="Wrap Text" onclick="toggleTextWrap()">
                             <i class="fas fa-text-height"></i>
                             <span class="ribbon-button-text">Wrap Text</span>
                         </button>
-                        <button class="ribbon-button" title="Align">
+                        <button class="ribbon-button" title="Align" onclick="showAlignMenu()">
                             <i class="fas fa-align-left"></i>
                             <span class="ribbon-button-text">Align</span>
                         </button>
@@ -884,6 +964,9 @@
                         <option value="pdf">PDF (.pdf)</option>
                         <option value="txt">Plain Text (.txt)</option>
                         <option value="html">Web Page (.html)</option>
+                        <option value="rtf">Rich Text Format (.rtf)</option>
+                        <option value="odt">OpenDocument Text (.odt)</option>
+                        <option value="xml">Word XML Document (.xml)</option>
                     </select>
                 </div>
             </div>
@@ -1035,7 +1118,7 @@
                     // Simulate file open
                     const fileInput = document.createElement('input');
                     fileInput.type = 'file';
-                    fileInput.accept = '.txt,.html,.docx';
+                    fileInput.accept = '.txt,.html,.docx,.rtf,.odt,.xml,.pdf';
                     fileInput.addEventListener('change', function() {
                         if (this.files && this.files[0]) {
                             const fileName = this.files[0].name;
@@ -1176,6 +1259,72 @@
             
             formatText('insertHTML', tableHTML);
             document.getElementById('table-grid-modal').style.display = 'none';
+        }
+
+        // Additional functionality for buttons
+        function applyStyle(style) {
+            switch(style) {
+                case 'normal':
+                    formatText('formatBlock', '<p>');
+                    break;
+                case 'heading1':
+                    formatText('formatBlock', '<h1>');
+                    break;
+                case 'heading2':
+                    formatText('formatBlock', '<h2>');
+                    break;
+                case 'title':
+                    formatText('formatBlock', '<h1>');
+                    formatText('fontSize', '7');
+                    break;
+            }
+        }
+
+        function insertCoverPage() {
+            const coverHTML = `
+                <div style="text-align: center; padding: 2in 0;">
+                    <h1 style="font-size: 36px; color: #d85a1b;">Document Title</h1>
+                    <p style="font-size: 18px;">Document Subtitle</p>
+                    <p style="margin-top: 2in;">Author Name</p>
+                    <p>Date: ${new Date().toLocaleDateString()}</p>
+                </div>
+                <hr>
+            `;
+            formatText('insertHTML', coverHTML);
+        }
+
+        function insertBlankPage() {
+            formatText('insertHTML', '<div style="page-break-before: always;"><br></div>');
+        }
+
+        function insertImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        formatText('insertHTML', `<img src="${e.target.result}" style="max-width: 100%;">`);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            };
+            input.click();
+        }
+
+        function insertComment() {
+            const comment = prompt('Enter your comment:');
+            if (comment) {
+                formatText('insertHTML', `<span style="background-color: #ffa500; color: black; padding: 2px 5px; border-radius: 3px;">${comment}</span>`);
+            }
+        }
+
+        function showColorPicker(type) {
+            const color = prompt('Enter color name or hex code:');
+            if (color) {
+                formatText(type, color);
+            }
         }
 
         // Word count update
