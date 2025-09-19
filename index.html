@@ -119,7 +119,6 @@
             background-color: #23382b;
             padding: 8px 15px;
             display: flex;
-            flex-wrap: wrap;
             gap: 15px;
             border-bottom: 1px solid #2a4a3c;
             min-height: 120px;
@@ -130,6 +129,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            min-width: 180px;
         }
 
         .ribbon-group {
@@ -206,6 +206,7 @@
             flex: 1;
             display: flex;
             overflow: hidden;
+            position: relative;
         }
 
         .ruler {
@@ -228,16 +229,21 @@
             justify-content: center;
         }
 
-        #content {
+        .page {
             width: 8.5in;
             min-height: 11in;
             background-color: #23312a;
             padding: 1in;
             border: 1px solid #3a5545;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            outline: none;
-            color: #e0e0e0;
             margin: 20px 0;
+            position: relative;
+            page-break-after: always;
+        }
+
+        .page-content {
+            min-height: 9in;
+            outline: none;
         }
 
         /* Status Bar */
@@ -452,46 +458,32 @@
             background-color: #d85a1b;
         }
 
-        /* Color picker */
-        .color-palette {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            gap: 5px;
-            padding: 10px;
-        }
-
-        .color-option {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #3a5545;
-            cursor: pointer;
-        }
-
-        /* Template gallery */
-        .template-gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 10px;
-        }
-
-        .template {
-            width: 100px;
-            height: 140px;
-            background-color: #2d3e33;
-            border: 1px solid #3a5545;
-            border-radius: 4px;
-            cursor: pointer;
+        /* Scrollable ribbon sections */
+        .scrollable-section {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 10px;
-            font-size: 12px;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 100px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
-        .template:hover {
-            border-color: #d85a1b;
+        .scrollable-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scrollable-section::-webkit-scrollbar-track {
+            background: #2d3e33;
+            border-radius: 3px;
+        }
+
+        .scrollable-section::-webkit-scrollbar-thumb {
+            background: #3a5545;
+            border-radius: 3px;
+        }
+
+        .scrollable-section::-webkit-scrollbar-thumb:hover {
+            background: #d85a1b;
         }
 
         /* Responsive adjustments */
@@ -515,7 +507,7 @@
                 min-height: 200px;
             }
             
-            #content {
+            .page {
                 width: 100%;
                 padding: 0.5in;
             }
@@ -616,76 +608,84 @@
                 </div>
             </div>
 
-            <!-- Font -->
+            <!-- Font - Scrollable Section -->
             <div class="ribbon-section">
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Font</div>
-                    <div class="ribbon-buttons">
-                        <select id="font-family" onchange="formatText('fontName', this.value)">
-                            <option value="Arial">Arial</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Calibri" selected>Calibri</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Verdana">Verdana</option>
-                        </select>
-                        <select id="font-size" onchange="formatText('fontSize', this.value)">
-                            <option value="1">8</option>
-                            <option value="2">10</option>
-                            <option value="3" selected>12</option>
-                            <option value="4">14</option>
-                            <option value="5">18</option>
-                            <option value="6">24</option>
-                            <option value="7">36</option>
-                        </select>
-                        <button class="ribbon-button" onclick="formatText('bold')" title="Bold">
-                            <i class="fas fa-bold"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('italic')" title="Italic">
-                            <i class="fas fa-italic"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('underline')" title="Underline">
-                            <i class="fas fa-underline"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="showColorPicker('forecolor')" title="Font Color">
-                            <i class="fas fa-palette"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="showColorPicker('backcolor')" title="Text Highlight">
-                            <i class="fas fa-highlighter"></i>
-                        </button>
+                    <div class="scrollable-section">
+                        <div class="ribbon-buttons">
+                            <select id="font-family" onchange="formatText('fontName', this.value)">
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Calibri" selected>Calibri</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                            <select id="font-size" onchange="formatText('fontSize', this.value)">
+                                <option value="1">8</option>
+                                <option value="2">10</option>
+                                <option value="3" selected>12</option>
+                                <option value="4">14</option>
+                                <option value="5">18</option>
+                                <option value="6">24</option>
+                                <option value="7">36</option>
+                            </select>
+                        </div>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-button" onclick="formatText('bold')" title="Bold">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('italic')" title="Italic">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('underline')" title="Underline">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="showColorPicker('forecolor')" title="Font Color">
+                                <i class="fas fa-palette"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="showColorPicker('backcolor')" title="Text Highlight">
+                                <i class="fas fa-highlighter"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Paragraph -->
+            <!-- Paragraph - Scrollable Section -->
             <div class="ribbon-section">
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Paragraph</div>
-                    <div class="ribbon-buttons">
-                        <button class="ribbon-button" onclick="formatText('justifyLeft')" title="Align Left">
-                            <i class="fas fa-align-left"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('justifyCenter')" title="Center">
-                            <i class="fas fa-align-center"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('justifyRight')" title="Align Right">
-                            <i class="fas fa-align-right"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('justifyFull')" title="Justify">
-                            <i class="fas fa-align-justify"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('insertUnorderedList')" title="Bullet List">
-                            <i class="fas fa-list-ul"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('insertOrderedList')" title="Numbered List">
-                            <i class="fas fa-list-ol"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('outdent')" title="Decrease Indent">
-                            <i class="fas fa-outdent"></i>
-                        </button>
-                        <button class="ribbon-button" onclick="formatText('indent')" title="Increase Indent">
-                            <i class="fas fa-indent"></i>
-                        </button>
+                    <div class="scrollable-section">
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-button" onclick="formatText('justifyLeft')" title="Align Left">
+                                <i class="fas fa-align-left"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('justifyCenter')" title="Center">
+                                <i class="fas fa-align-center"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('justifyRight')" title="Align Right">
+                                <i class="fas fa-align-right"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('justifyFull')" title="Justify">
+                                <i class="fas fa-align-justify"></i>
+                            </button>
+                        </div>
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-button" onclick="formatText('insertUnorderedList')" title="Bullet List">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('insertOrderedList')" title="Numbered List">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('outdent')" title="Decrease Indent">
+                                <i class="fas fa-outdent"></i>
+                            </button>
+                            <button class="ribbon-button" onclick="formatText('indent')" title="Increase Indent">
+                                <i class="fas fa-indent"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -694,23 +694,25 @@
             <div class="ribbon-section">
                 <div class="ribbon-group">
                     <div class="ribbon-group-title">Styles</div>
-                    <div class="ribbon-buttons">
-                        <button class="ribbon-button" onclick="applyStyle('normal')" title="Normal">
-                            <i class="fas fa-paragraph"></i>
-                            <span class="ribbon-button-text">Normal</span>
-                        </button>
-                        <button class="ribbon-button" onclick="applyStyle('heading1')" title="Heading 1">
-                            <i class="fas fa-heading"></i>
-                            <span class="ribbon-button-text">Heading 1</span>
-                        </button>
-                        <button class="ribbon-button" onclick="applyStyle('heading2')" title="Heading 2">
-                            <i class="fas fa-heading"></i>
-                            <span class="ribbon-button-text">Heading 2</span>
-                        </button>
-                        <button class="ribbon-button" onclick="applyStyle('title')" title="Title">
-                            <i class="fas fa-heading"></i>
-                            <span class="ribbon-button-text">Title</span>
-                        </button>
+                    <div class="scrollable-section">
+                        <div class="ribbon-buttons">
+                            <button class="ribbon-button" onclick="applyStyle('normal')" title="Normal">
+                                <i class="fas fa-paragraph"></i>
+                                <span class="ribbon-button-text">Normal</span>
+                            </button>
+                            <button class="ribbon-button" onclick="applyStyle('heading1')" title="Heading 1">
+                                <i class="fas fa-heading"></i>
+                                <span class="ribbon-button-text">Heading 1</span>
+                            </button>
+                            <button class="ribbon-button" onclick="applyStyle('heading2')" title="Heading 2">
+                                <i class="fas fa-heading"></i>
+                                <span class="ribbon-button-text">Heading 2</span>
+                            </button>
+                            <button class="ribbon-button" onclick="applyStyle('title')" title="Title">
+                                <i class="fas fa-heading"></i>
+                                <span class="ribbon-button-text">Title</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -896,9 +898,9 @@
 
     <!-- Editor Area -->
     <div class="editor-container">
-        <div class="editor">
-            <div id="content" contenteditable="true">
-                <!-- Empty content area for editing -->
+        <div class="editor" id="editor">
+            <div class="page" id="page-1">
+                <div class="page-content" contenteditable="true" oninput="checkPageEnd(this)"></div>
             </div>
         </div>
     </div>
@@ -906,8 +908,8 @@
     <!-- Status Bar -->
     <div class="status-bar">
         <div class="status-items">
-            <span>Page 1 of 1</span>
-            <span>Words: 0</span>
+            <span id="page-count">Page 1 of 1</span>
+            <span id="word-count">Words: 0</span>
         </div>
         <div class="status-items">
             <span>100%</span>
@@ -1016,20 +1018,63 @@
     </div>
 
     <script>
+        // Track pages
+        let pageCount = 1;
+        let currentPage = 1;
+
         // Basic text formatting using document.execCommand
         function formatText(command, value = null) {
+            const editor = document.querySelector('.page-content[contenteditable="true"]');
+            editor.focus();
             document.execCommand(command, false, value);
-            document.getElementById('content').focus();
             updateWordCount();
         }
 
+        // Check if we've reached the end of a page and add a new one if needed
+        function checkPageEnd(element) {
+            const rect = element.getBoundingClientRect();
+            const pageHeight = element.offsetHeight;
+            const contentHeight = element.scrollHeight;
+            
+            // If content is about to exceed page height, add a new page
+            if (contentHeight > pageHeight - 50) { // 50px buffer
+                addNewPage();
+            }
+            
+            updateWordCount();
+        }
+
+        // Add a new page
+        function addNewPage() {
+            pageCount++;
+            currentPage = pageCount;
+            
+            const newPage = document.createElement('div');
+            newPage.className = 'page';
+            newPage.id = `page-${pageCount}`;
+            newPage.innerHTML = `<div class="page-content" contenteditable="true" oninput="checkPageEnd(this)"></div>`;
+            
+            document.getElementById('editor').appendChild(newPage);
+            document.getElementById('page-count').textContent = `Page ${currentPage} of ${pageCount}`;
+            
+            // Scroll to the new page
+            newPage.scrollIntoView({ behavior: 'smooth' });
+            
+            // Focus on the new page's content area
+            setTimeout(() => {
+                newPage.querySelector('.page-content').focus();
+            }, 100);
+        }
+
         // Show context menu
-        document.getElementById('content').addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            const contextMenu = document.getElementById('context-menu');
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = e.pageX + 'px';
-            contextMenu.style.top = e.pageY + 'px';
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.closest('.page-content')) {
+                e.preventDefault();
+                const contextMenu = document.getElementById('context-menu');
+                contextMenu.style.display = 'block';
+                contextMenu.style.left = e.pageX + 'px';
+                contextMenu.style.top = e.pageY + 'px';
+            }
         });
 
         // Hide context menu on click elsewhere
@@ -1106,8 +1151,15 @@
             switch(action) {
                 case 'new':
                     if (confirm('Create a new document? Any unsaved changes will be lost.')) {
-                        document.getElementById('content').innerHTML = '';
+                        document.getElementById('editor').innerHTML = `
+                            <div class="page" id="page-1">
+                                <div class="page-content" contenteditable="true" oninput="checkPageEnd(this)"></div>
+                            </div>
+                        `;
+                        pageCount = 1;
+                        currentPage = 1;
                         document.getElementById('current-document').textContent = 'Document1';
+                        document.getElementById('page-count').textContent = 'Page 1 of 1';
                         updateWordCount();
                     }
                     break;
@@ -1122,13 +1174,19 @@
                     fileInput.addEventListener('change', function() {
                         if (this.files && this.files[0]) {
                             const fileName = this.files[0].name;
-                            document.getElementById('current-document').textContent = fileName;
+                            document.getElementById('current-document').textContent = fileName.replace(/\.[^/.]+$/, ""); // Remove extension
                             alert('File "' + fileName + '" opened successfully.');
                             
                             // In a real application, you would read the file content
                             const reader = new FileReader();
                             reader.onload = function(e) {
-                                document.getElementById('content').innerHTML = e.target.result;
+                                document.getElementById('editor').innerHTML = `
+                                    <div class="page" id="page-1">
+                                        <div class="page-content" contenteditable="true" oninput="checkPageEnd(this)">${e.target.result}</div>
+                                    </div>
+                                `;
+                                pageCount = 1;
+                                currentPage = 1;
                                 updateWordCount();
                             };
                             reader.readAsText(this.files[0]);
@@ -1151,8 +1209,15 @@
                     break;
                 case 'close':
                     if (confirm('Close the document?')) {
-                        document.getElementById('content').innerHTML = '';
+                        document.getElementById('editor').innerHTML = `
+                            <div class="page" id="page-1">
+                                <div class="page-content" contenteditable="true" oninput="checkPageEnd(this)"></div>
+                            </div>
+                        `;
+                        pageCount = 1;
+                        currentPage = 1;
                         document.getElementById('current-document').textContent = 'Document1';
+                        document.getElementById('page-count').textContent = 'Page 1 of 1';
                         updateWordCount();
                     }
                     break;
@@ -1177,22 +1242,27 @@
             });
         });
 
-        // Save functionality
+        // Save functionality - FIXED FILE EXTENSION ISSUE
         document.getElementById('confirm-save').addEventListener('click', function() {
-            const filename = document.getElementById('filename').value;
+            const filenameInput = document.getElementById('filename').value;
             const format = document.getElementById('fileformat').value;
             
-            document.getElementById('current-document').textContent = filename + '.' + format;
+            // Remove any existing extension from the filename
+            const baseFilename = filenameInput.replace(/\.[^/.]+$/, "");
+            
+            document.getElementById('current-document').textContent = baseFilename;
             
             // In a real application, you would save the file
-            const content = document.getElementById('content').innerHTML;
+            const content = document.getElementById('editor').innerHTML;
             const blob = new Blob([content], {type: 'text/html'});
             const a = document.createElement('a');
-            a.download = filename + '.' + format;
+            
+            // Use the correct extension without adding .html
+            a.download = `${baseFilename}.${format}`;
             a.href = URL.createObjectURL(blob);
             a.click();
             
-            alert('Document saved as ' + filename + '.' + format);
+            alert(`Document saved as ${baseFilename}.${format}`);
             document.getElementById('save-modal').style.display = 'none';
         });
 
@@ -1329,17 +1399,20 @@
 
         // Word count update
         function updateWordCount() {
-            const content = document.getElementById('content');
-            const text = content.innerText || '';
-            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-            document.querySelector('.status-items span:nth-child(2)').textContent = `Words: ${wordCount}`;
+            const contentElements = document.querySelectorAll('.page-content');
+            let totalWords = 0;
+            
+            contentElements.forEach(element => {
+                const text = element.innerText || '';
+                const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+                totalWords += wordCount;
+            });
+            
+            document.getElementById('word-count').textContent = `Words: ${totalWords}`;
         }
 
-        // Update word count on input
-        document.getElementById('content').addEventListener('input', updateWordCount);
-
         // Initialize editor focus and word count
-        document.getElementById('content').focus();
+        document.querySelector('.page-content').focus();
         updateWordCount();
     </script>
 </body>
