@@ -226,7 +226,8 @@
             color: #e0e0e0;
             line-height: 1.5;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
         }
 
         .page {
@@ -236,9 +237,8 @@
             padding: 1in;
             border: 1px solid #3a5545;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            margin: 20px 0;
+            margin-bottom: 20px;
             position: relative;
-            page-break-after: always;
         }
 
         .page-content {
@@ -603,6 +603,23 @@
                         <button class="ribbon-button" title="Format Painter" onclick="alert('Format Painter activated. Click on text to apply formatting.')">
                             <i class="fas fa-paint-brush"></i>
                             <span class="ribbon-button-text">Format Painter</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Undo/Redo -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">History</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="Undo" onclick="undo()">
+                            <i class="fas fa-undo"></i>
+                            <span class="ribbon-button-text">Undo</span>
+                        </button>
+                        <button class="ribbon-button" title="Redo" onclick="redo()">
+                            <i class="fas fa-redo"></i>
+                            <span class="ribbon-button-text">Redo</span>
                         </button>
                     </div>
                 </div>
@@ -1021,27 +1038,91 @@
         // Track pages
         let pageCount = 1;
         let currentPage = 1;
+        let isAddingPage = false;
+
+        // Undo/Redo functionality
+        let history = [];
+        let historyIndex = -1;
+        let isUndoRedo = false;
+
+        // Initialize the editor
+        function initEditor() {
+            const editor = document.querySelector('.page-content[contenteditable="true"]');
+            editor.focus();
+            
+            // Save initial state
+            saveState();
+            
+            // Add event listener for changes
+            editor.addEventListener('input', function() {
+                if (!isUndoRedo) {
+                    saveState();
+                }
+                checkPageEnd(this);
+            });
+        }
+
+        // Save state for undo/redo
+        function saveState() {
+            // Remove any states after the current index
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            
+            // Save the current content
+            const content = document.getElementById('editor').innerHTML;
+            history.push(content);
+            historyIndex = history.length - 1;
+        }
+
+        // Undo functionality
+        function undo() {
+            if (historyIndex > 0) {
+                isUndoRedo = true;
+                historyIndex--;
+                document.getElementById('editor').innerHTML = history[historyIndex];
+                isUndoRedo = false;
+                updateWordCount();
+                updatePageCount();
+            }
+        }
+
+        // Redo functionality
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                isUndoRedo = true;
+                historyIndex++;
+                document.getElementById('editor').innerHTML = history[historyIndex];
+                isUndoRedo = false;
+                updateWordCount();
+                updatePageCount();
+            }
+        }
 
         // Basic text formatting using document.execCommand
         function formatText(command, value = null) {
             const editor = document.querySelector('.page-content[contenteditable="true"]');
             editor.focus();
             document.execCommand(command, false, value);
+            if (!isUndoRedo) {
+                saveState();
+            }
             updateWordCount();
         }
 
         // Check if we've reached the end of a page and add a new one if needed
         function checkPageEnd(element) {
-            const rect = element.getBoundingClientRect();
-            const pageHeight = element.offsetHeight;
+            if (isAddingPage) return;
+            
             const contentHeight = element.scrollHeight;
+            const pageHeight = element.offsetHeight;
             
-            // If content is about to exceed page height, add a new page
-            if (contentHeight > pageHeight - 50) { // 50px buffer
+            // If content exceeds page height, add a new page
+            if (contentHeight > pageHeight - 20) { // 20px buffer
+                isAddingPage = true;
                 addNewPage();
+                setTimeout(() => { isAddingPage = false; }, 100);
             }
-            
-            updateWordCount();
         }
 
         // Add a new page
@@ -1055,15 +1136,24 @@
             newPage.innerHTML = `<div class="page-content" contenteditable="true" oninput="checkPageEnd(this)"></div>`;
             
             document.getElementById('editor').appendChild(newPage);
-            document.getElementById('page-count').textContent = `Page ${currentPage} of ${pageCount}`;
+            updatePageCount();
             
             // Scroll to the new page
-            newPage.scrollIntoView({ behavior: 'smooth' });
-            
-            // Focus on the new page's content area
             setTimeout(() => {
+                newPage.scrollIntoView({ behavior: 'smooth' });
                 newPage.querySelector('.page-content').focus();
             }, 100);
+            
+            if (!isUndoRedo) {
+                saveState();
+            }
+        }
+
+        // Update page count display
+        function updatePageCount() {
+            const pages = document.querySelectorAll('.page');
+            pageCount = pages.length;
+            document.getElementById('page-count').textContent = `Page ${currentPage} of ${pageCount}`;
         }
 
         // Show context menu
@@ -1159,8 +1249,11 @@
                         pageCount = 1;
                         currentPage = 1;
                         document.getElementById('current-document').textContent = 'Document1';
-                        document.getElementById('page-count').textContent = 'Page 1 of 1';
+                        updatePageCount();
                         updateWordCount();
+                        history = [];
+                        historyIndex = -1;
+                        initEditor();
                     }
                     break;
                 case 'new-template':
@@ -1187,7 +1280,11 @@
                                 `;
                                 pageCount = 1;
                                 currentPage = 1;
+                                updatePageCount();
                                 updateWordCount();
+                                history = [];
+                                historyIndex = -1;
+                                initEditor();
                             };
                             reader.readAsText(this.files[0]);
                         }
@@ -1217,8 +1314,11 @@
                         pageCount = 1;
                         currentPage = 1;
                         document.getElementById('current-document').textContent = 'Document1';
-                        document.getElementById('page-count').textContent = 'Page 1 of 1';
+                        updatePageCount();
                         updateWordCount();
+                        history = [];
+                        historyIndex = -1;
+                        initEditor();
                     }
                     break;
                 case 'account':
@@ -1411,8 +1511,8 @@
             document.getElementById('word-count').textContent = `Words: ${totalWords}`;
         }
 
-        // Initialize editor focus and word count
-        document.querySelector('.page-content').focus();
+        // Initialize editor
+        initEditor();
         updateWordCount();
     </script>
 </body>
