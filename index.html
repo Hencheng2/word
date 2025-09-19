@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordClone - Dark Theme</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header and Title Bar */
+        .title-bar {
+            background-color: #152420;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            -webkit-app-region: drag;
+            border-bottom: 1px solid #2a4a3c;
+        }
+
+        .document-name {
+            font-size: 13px;
+            color: #a5a5a5;
+        }
+
+        .window-controls {
+            display: flex;
+            -webkit-app-region: no-drag;
+        }
+
+        .window-controls button {
+            background: none;
+            border: none;
+            color: #ccc;
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .window-controls button:hover {
+            background-color: #2d3e33;
+        }
+
+        /* Menu Bar */
+        .menu-bar {
+            background-color: #1e2e24;
+            display: flex;
+            padding: 0 10px;
+            height: 30px;
+            align-items: center;
+            border-bottom: 1px solid #2a4a3c;
+        }
+
+        .menu-item {
+            padding: 5px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .menu-item:hover {
+            background-color: #2d3e33;
+        }
+
+        /* Ribbon/Toolbar */
+        .ribbon {
+            background-color: #23382b;
+            padding: 8px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #2a4a3c;
+        }
+
+        .ribbon-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .ribbon-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding-right: 15px;
+            border-right: 1px solid #3a4a42;
+        }
+
+        .ribbon-button {
+            background-color: transparent;
+            border: none;
+            color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .ribbon-button:hover {
+            background-color: #3a5545;
+        }
+
+        .ribbon-button.active {
+            background-color: #d85a1b;
+            color: white;
+        }
+
+        .divider {
+            width: 1px;
+            height: 24px;
+            background-color: #3a4a42;
+            margin: 0 10px;
+        }
+
+        select, input {
+            background-color: #2d3e33;
+            border: 1px solid #3a5545;
+            color: #e0e0e0;
+            padding: 4px;
+            border-radius: 3px;
+        }
+
+        /* Editor Area */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .ruler {
+            background-color: #23312a;
+            height: 30px;
+            border-bottom: 1px solid #2a4a3c;
+            padding: 5px 15px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .editor {
+            flex: 1;
+            padding: 20px 40px;
+            background-color: #1e2e24;
+            overflow-y: auto;
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        #content {
+            min-height: 100%;
+            background-color: #23312a;
+            padding: 40px;
+            border: 1px solid #3a5545;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            outline: none;
+            color: #e0e0e0;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background-color: #152420;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            font-size: 12px;
+            color: #a5a5a5;
+            border-top: 1px solid #2a4a3c;
+        }
+
+        .status-items {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: absolute;
+            background-color: #23382b;
+            border: 1px solid #3a5545;
+            border-radius: 4px;
+            padding: 5px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        .context-menu-item {
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .context-menu-item:hover {
+            background-color: #3a5545;
+        }
+
+        /* Color Picker */
+        .color-picker {
+            display: none;
+            position: absolute;
+            background-color: #23382b;
+            padding: 10px;
+            border: 1px solid #3a5545;
+            border-radius: 4px;
+            z-index: 1001;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-option {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin: 3px;
+            cursor: pointer;
+            border: 1px solid #3a5545;
+        }
+
+        /* Icon styling */
+        i.ico {
+            font-style: normal;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Title Bar -->
+    <div class="title-bar">
+        <div class="document-name">Document1 - WordClone</div>
+        <div class="window-controls">
+            <button>&#xE921;</button>
+            <button>&#xE922;</button>
+            <button>&#xE8BB;</button>
+        </div>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">Edit</div>
+        <div class="menu-item">View</div>
+        <div class="menu-item">Insert</div>
+        <div class="menu-item">Format</div>
+        <div class="menu-item">Tools</div>
+        <div class="menu-item">Table</div>
+        <div class="menu-item">Help</div>
+    </div>
+
+    <!-- Ribbon/Toolbar -->
+    <div class="ribbon">
+        <!-- Clipboard -->
+        <div class="ribbon-section">
+            <div class="ribbon-group">
+                <button class="ribbon-button" title="Paste"><i class="ico">&#xE77F;</i> Paste</button>
+                <button class="ribbon-button" title="Cut"><i class="ico">&#xE8C6;</i> Cut</button>
+                <button class="ribbon-button" title="Copy"><i class="ico">&#xE8C8;</i> Copy</button>
+            </div>
+        </div>
+
+        <!-- Font -->
+        <div class="ribbon-section">
+            <div class="ribbon-group">
+                <select id="font-family">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Calibri">Calibri</option>
+                </select>
+                <select id="font-size">
+                    <option value="1">8</option>
+                    <option value="2">10</option>
+                    <option value="3">12</option>
+                    <option value="4">14</option>
+                    <option value="5">18</option>
+                    <option value="6">24</option>
+                    <option value="7">36</option>
+                </select>
+                <button class="ribbon-button" onclick="formatText('bold')" title="Bold"><i class="ico">&#xE8DD;</i></button>
+                <button class="ribbon-button" onclick="formatText('italic')" title="Italic"><i class="ico">&#xE8DB;</i></button>
+                <button class="ribbon-button" onclick="formatText('underline')" title="Underline"><i class="ico">&#xE8DC;</i></button>
+                <button class="ribbon-button" onclick="showColorPicker('forecolor')" title="Font Color"><i class="ico">&#xE8F3;</i></button>
+                <button class="ribbon-button" onclick="showColorPicker('backcolor')" title="Text Highlight"><i class="ico">&#xE7B6;</i></button>
+            </div>
+        </div>
+
+        <!-- Paragraph -->
+        <div class="ribbon-section">
+            <div class="ribbon-group">
+                <button class="ribbon-button" onclick="formatText('justifyLeft')" title="Align Left"><i class="ico">&#xE8E4;</i></button>
+                <button class="ribbon-button" onclick="formatText('justifyCenter')" title="Center"><i class="ico">&#xE8E3;</i></button>
+                <button class="ribbon-button" onclick="formatText('justifyRight')" title="Align Right"><i class="ico">&#xE8E2;</i></button>
+                <button class="ribbon-button" onclick="formatText('justifyFull')" title="Justify"><i class="ico">&#xE8E1;</i></button>
+                <button class="ribbon-button" onclick="formatText('insertUnorderedList')" title="Bullet List"><i class="ico">&#xE8FD;</i></button>
+                <button class="ribbon-button" onclick="formatText('insertOrderedList')" title="Numbered List"><i class="ico">&#xE8FE;</i></button>
+                <button class="ribbon-button" title="Decrease Indent"><i class="ico">&#xE8FF;</i></button>
+                <button class="ribbon-button" title="Increase Indent"><i class="ico">&#xE900;</i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ruler -->
+    <div class="ruler">
+        <!-- Ruler markings would go here -->
+    </div>
+
+    <!-- Editor Area -->
+    <div class="editor-container">
+        <div class="editor">
+            <div id="content" contenteditable="true">
+                <h1 style="color: #d85a1b;">Welcome to WordClone</h1>
+                <p>This is a fully functional word processor clone with a dark green theme and orange accents.</p>
+                <p>Try out the formatting options above to <strong>bold</strong>, <em>italicize</em>, or <u>underline</u> text.</p>
+                <p>You can also change text color, alignment, and create lists:</p>
+                <ul>
+                    <li>First item</li>
+                    <li>Second item</li>
+                    <li>Third item</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-items">
+            <span>Page 1 of 1</span>
+            <span>Words: 42</span>
+        </div>
+        <div class="status-items">
+            <span>100%</span>
+            <span>English (US)</span>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" onclick="formatText('cut')">Cut</div>
+        <div class="context-menu-item" onclick="formatText('copy')">Copy</div>
+        <div class="context-menu-item" onclick="formatText('paste')">Paste</div>
+        <div class="context-menu-item" onclick="formatText('bold')">Bold</div>
+        <div class="context-menu-item" onclick="formatText('italic')">Italic</div>
+        <div class="context-menu-item" onclick="formatText('underline')">Underline</div>
+    </div>
+
+    <!-- Color Picker -->
+    <div class="color-picker" id="color-picker">
+        <div class="color-option" style="background-color: #d85a1b;" onclick="setColor('#d85a1b')"></div>
+        <div class="color-option" style="background-color: #e0e0e0;" onclick="setColor('#e0e0e0')"></div>
+        <div class="color-option" style="background-color: #ff5555;" onclick="setColor('#ff5555')"></div>
+        <div class="color-option" style="background-color: #55ff55;" onclick="setColor('#55ff55')"></div>
+        <div class="color-option" style="background-color: #5555ff;" onclick="setColor('#5555ff')"></div>
+        <div class="color-option" style="background-color: #ffff55;" onclick="setColor('#ffff55')"></div>
+        <div class="color-option" style="background-color: #ff55ff;" onclick="setColor('#ff55ff')"></div>
+        <div class="color-option" style="background-color: #55ffff;" onclick="setColor('#55ffff')"></div>
+    </div>
+
+    <script>
+        // Basic text formatting using document.execCommand
+        function formatText(command, value = null) {
+            document.execCommand(command, false, value);
+            document.getElementById('content').focus();
+        }
+
+        // Show context menu
+        document.getElementById('content').addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            const contextMenu = document.getElementById('context-menu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = e.pageX + 'px';
+            contextMenu.style.top = e.pageY + 'px';
+        });
+
+        // Hide context menu on click elsewhere
+        document.addEventListener('click', function() {
+            document.getElementById('context-menu').style.display = 'none';
+        });
+
+        // Font family and size changes
+        document.getElementById('font-family').addEventListener('change', function() {
+            formatText('fontName', this.value);
+        });
+
+        document.getElementById('font-size').addEventListener('change', function() {
+            formatText('fontSize', this.value);
+        });
+
+        // Color picker functionality
+        let currentColorCommand = null;
+
+        function showColorPicker(command) {
+            currentColorCommand = command;
+            const picker = document.getElementById('color-picker');
+            picker.style.display = 'block';
+            picker.style.left = '50%';
+            picker.style.top = '50%';
+        }
+
+        function setColor(color) {
+            if (currentColorCommand) {
+                formatText(currentColorCommand, color);
+            }
+            document.getElementById('color-picker').style.display = 'none';
+        }
+
+        // Hide color picker when clicking elsewhere
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.ribbon-button') && !e.target.closest('#color-picker')) {
+                document.getElementById('color-picker').style.display = 'none';
+            }
+        });
+
+        // Word count update (simplified)
+        function updateWordCount() {
+            // This would normally count words in the document
+        }
+
+        // Initialize editor focus
+        document.getElementById('content').focus();
+    </script>
+</body>
+</html>
