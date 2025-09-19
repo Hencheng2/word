@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WordClone - Dark Theme</title>
+    <title>WordClone - Professional Document Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -21,7 +22,7 @@
             overflow: hidden;
         }
 
-        /* Header and Title Bar */
+        /* Title Bar */
         .title-bar {
             background-color: #152420;
             height: 32px;
@@ -29,18 +30,23 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 8px;
-            -webkit-app-region: drag;
             border-bottom: 1px solid #2a4a3c;
         }
 
         .document-name {
             font-size: 13px;
             color: #a5a5a5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .document-name i {
+            color: #d85a1b;
         }
 
         .window-controls {
             display: flex;
-            -webkit-app-region: no-drag;
         }
 
         .window-controls button {
@@ -72,10 +78,16 @@
             font-size: 14px;
             cursor: pointer;
             border-radius: 3px;
+            position: relative;
         }
 
         .menu-item:hover {
             background-color: #2d3e33;
+        }
+
+        .menu-item.active {
+            background-color: #2d3e33;
+            color: #d85a1b;
         }
 
         /* Ribbon/Toolbar */
@@ -157,21 +169,25 @@
 
         .editor {
             flex: 1;
-            padding: 20px 40px;
+            padding: 20px;
             background-color: #1e2e24;
             overflow-y: auto;
             color: #e0e0e0;
             line-height: 1.5;
+            display: flex;
+            justify-content: center;
         }
 
         #content {
-            min-height: 100%;
+            width: 8.5in;
+            min-height: 11in;
             background-color: #23312a;
-            padding: 40px;
+            padding: 1in;
             border: 1px solid #3a5545;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
             outline: none;
             color: #e0e0e0;
+            margin: 20px 0;
         }
 
         /* Status Bar */
@@ -202,43 +218,161 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             display: none;
             z-index: 1000;
+            width: 200px;
         }
 
         .context-menu-item {
             padding: 8px 20px;
             font-size: 14px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .context-menu-item:hover {
             background-color: #3a5545;
         }
 
-        /* Color Picker */
-        .color-picker {
-            display: none;
+        /* Dropdown menus */
+        .dropdown {
             position: absolute;
             background-color: #23382b;
-            padding: 10px;
             border: 1px solid #3a5545;
             border-radius: 4px;
-            z-index: 1001;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+            width: 250px;
+            top: 30px;
+            left: 0;
         }
 
-        .color-option {
-            width: 20px;
-            height: 20px;
-            display: inline-block;
-            margin: 3px;
+        .dropdown-item {
+            padding: 8px 20px;
+            font-size: 14px;
             cursor: pointer;
-            border: 1px solid #3a5545;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* Icon styling */
-        i.ico {
-            font-style: normal;
-            font-size: 16px;
+        .dropdown-item:hover {
+            background-color: #3a5545;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #3a5545;
+            margin: 5px 0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #23382b;
+            padding: 20px;
+            border: 1px solid #3a5545;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3a5545;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            color: #d85a1b;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #e0e0e0;
+        }
+
+        .modal-body {
+            margin-bottom: 15px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #d85a1b;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #3a5545;
+            color: #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #a5a5a5;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #3a5545;
+            background-color: #2d3e33;
+            color: #e0e0e0;
+        }
+
+        /* Tabs for different ribbon sections */
+        .ribbon-tab {
+            display: none;
+        }
+
+        .ribbon-tab.active {
+            display: flex;
+        }
+
+        /* Icons */
+        .icon {
             width: 20px;
             text-align: center;
         }
@@ -247,34 +381,52 @@
 <body>
     <!-- Title Bar -->
     <div class="title-bar">
-        <div class="document-name">Document1 - WordClone</div>
+        <div class="document-name">
+            <i class="fas fa-file-word"></i>
+            <span id="current-document">Document1</span>
+        </div>
         <div class="window-controls">
-            <button>&#xE921;</button>
-            <button>&#xE922;</button>
-            <button>&#xE8BB;</button>
+            <button><i class="fas fa-minus"></i></button>
+            <button><i class="fas fa-square"></i></button>
+            <button><i class="fas fa-times"></i></button>
         </div>
     </div>
 
     <!-- Menu Bar -->
     <div class="menu-bar">
-        <div class="menu-item">File</div>
-        <div class="menu-item">Edit</div>
-        <div class="menu-item">View</div>
-        <div class="menu-item">Insert</div>
-        <div class="menu-item">Format</div>
-        <div class="menu-item">Tools</div>
-        <div class="menu-item">Table</div>
-        <div class="menu-item">Help</div>
+        <div class="menu-item active" data-tab="file">File</div>
+        <div class="menu-item" data-tab="home">Home</div>
+        <div class="menu-item" data-tab="insert">Insert</div>
+        <div class="menu-item" data-tab="layout">Layout</div>
+        <div class="menu-item" data-tab="references">References</div>
+        <div class="menu-item" data-tab="review">Review</div>
+        <div class="menu-item" data-tab="view">View</div>
+        <div class="menu-item" data-tab="help">Help</div>
     </div>
 
-    <!-- Ribbon/Toolbar -->
+    <!-- File Dropdown -->
+    <div class="dropdown" id="file-dropdown">
+        <div class="dropdown-item" data-action="new"><i class="fas fa-plus icon"></i> New</div>
+        <div class="dropdown-item" data-action="open"><i class="fas fa-folder-open icon"></i> Open</div>
+        <div class="dropdown-item" data-action="save"><i class="fas fa-save icon"></i> Save</div>
+        <div class="dropdown-item" data-action="save-as"><i class="fas fa-save icon"></i> Save As</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" data-action="print"><i class="fas fa-print icon"></i> Print</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" data-action="share"><i class="fas fa-share-alt icon"></i> Share</div>
+        <div class="dropdown-item" data-action="export"><i class="fas fa-file-export icon"></i> Export</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" data-action="close"><i class="fas fa-times-circle icon"></i> Close</div>
+    </div>
+
+    <!-- Ribbon/Toolbar - Home Tab -->
     <div class="ribbon">
         <!-- Clipboard -->
         <div class="ribbon-section">
             <div class="ribbon-group">
-                <button class="ribbon-button" title="Paste"><i class="ico">&#xE77F;</i> Paste</button>
-                <button class="ribbon-button" title="Cut"><i class="ico">&#xE8C6;</i> Cut</button>
-                <button class="ribbon-button" title="Copy"><i class="ico">&#xE8C8;</i> Copy</button>
+                <button class="ribbon-button" title="Paste"><i class="fas fa-paste icon"></i> Paste</button>
+                <button class="ribbon-button" title="Cut"><i class="fas fa-cut icon"></i> Cut</button>
+                <button class="ribbon-button" title="Copy"><i class="fas fa-copy icon"></i> Copy</button>
             </div>
         </div>
 
@@ -285,36 +437,44 @@
                     <option value="Arial">Arial</option>
                     <option value="Times New Roman">Times New Roman</option>
                     <option value="Courier New">Courier New</option>
-                    <option value="Calibri">Calibri</option>
+                    <option value="Calibri" selected>Calibri</option>
                 </select>
                 <select id="font-size">
                     <option value="1">8</option>
                     <option value="2">10</option>
-                    <option value="3">12</option>
+                    <option value="3" selected>12</option>
                     <option value="4">14</option>
                     <option value="5">18</option>
                     <option value="6">24</option>
                     <option value="7">36</option>
                 </select>
-                <button class="ribbon-button" onclick="formatText('bold')" title="Bold"><i class="ico">&#xE8DD;</i></button>
-                <button class="ribbon-button" onclick="formatText('italic')" title="Italic"><i class="ico">&#xE8DB;</i></button>
-                <button class="ribbon-button" onclick="formatText('underline')" title="Underline"><i class="ico">&#xE8DC;</i></button>
-                <button class="ribbon-button" onclick="showColorPicker('forecolor')" title="Font Color"><i class="ico">&#xE8F3;</i></button>
-                <button class="ribbon-button" onclick="showColorPicker('backcolor')" title="Text Highlight"><i class="ico">&#xE7B6;</i></button>
+                <button class="ribbon-button" onclick="formatText('bold')" title="Bold"><i class="fas fa-bold icon"></i></button>
+                <button class="ribbon-button" onclick="formatText('italic')" title="Italic"><i class="fas fa-italic icon"></i></button>
+                <button class="ribbon-button" onclick="formatText('underline')" title="Underline"><i class="fas fa-underline icon"></i></button>
+                <button class="ribbon-button" onclick="showColorPicker('forecolor')" title="Font Color"><i class="fas fa-palette icon"></i></button>
+                <button class="ribbon-button" onclick="showColorPicker('backcolor')" title="Text Highlight"><i class="fas fa-highlighter icon"></i></button>
             </div>
         </div>
 
         <!-- Paragraph -->
         <div class="ribbon-section">
             <div class="ribbon-group">
-                <button class="ribbon-button" onclick="formatText('justifyLeft')" title="Align Left"><i class="ico">&#xE8E4;</i></button>
-                <button class="ribbon-button" onclick="formatText('justifyCenter')" title="Center"><i class="ico">&#xE8E3;</i></button>
-                <button class="ribbon-button" onclick="formatText('justifyRight')" title="Align Right"><i class="ico">&#xE8E2;</i></button>
-                <button class="ribbon-button" onclick="formatText('justifyFull')" title="Justify"><i class="ico">&#xE8E1;</i></button>
-                <button class="ribbon-button" onclick="formatText('insertUnorderedList')" title="Bullet List"><i class="ico">&#xE8FD;</i></button>
-                <button class="ribbon-button" onclick="formatText('insertOrderedList')" title="Numbered List"><i class="ico">&#xE8FE;</i></button>
-                <button class="ribbon-button" title="Decrease Indent"><i class="ico">&#xE8FF;</i></button>
-                <button class="ribbon-button" title="Increase Indent"><i class="ico">&#xE900;</i></button>
+                <button class="ribbon-button" onclick="formatText('justifyLeft')" title="Align Left"><i class="fas fa-align-left icon"></i></button>
+                <button class="ribbon-button" onclick="formatText('justifyCenter')" title="Center"><i class="fas fa-align-center icon"></i></button>
+                <button class="ribbon-button" onclick="formatText('justifyRight')" title="Align Right"><i class="fas fa-align-right icon"></i></button>
+                <button class="ribbon-button" onclick="formatText('justifyFull')" title="Justify"><i class="fas fa-align-justify icon"></i></button>
+                <button class="ribbon-button" onclick="formatText('insertUnorderedList')" title="Bullet List"><i class="fas fa-list-ul icon"></i></button>
+                <button class="ribbon-button" onclick="formatText('insertOrderedList')" title="Numbered List"><i class="fas fa-list-ol icon"></i></button>
+                <button class="ribbon-button" title="Decrease Indent"><i class="fas fa-outdent icon"></i></button>
+                <button class="ribbon-button" title="Increase Indent"><i class="fas fa-indent icon"></i></button>
+            </div>
+        </div>
+
+        <!-- Editing -->
+        <div class="ribbon-section">
+            <div class="ribbon-group">
+                <button class="ribbon-button" title="Find"><i class="fas fa-search icon"></i> Find</button>
+                <button class="ribbon-button" title="Replace"><i class="fas fa-exchange-alt icon"></i> Replace</button>
             </div>
         </div>
     </div>
@@ -328,15 +488,7 @@
     <div class="editor-container">
         <div class="editor">
             <div id="content" contenteditable="true">
-                <h1 style="color: #d85a1b;">Welcome to WordClone</h1>
-                <p>This is a fully functional word processor clone with a dark green theme and orange accents.</p>
-                <p>Try out the formatting options above to <strong>bold</strong>, <em>italicize</em>, or <u>underline</u> text.</p>
-                <p>You can also change text color, alignment, and create lists:</p>
-                <ul>
-                    <li>First item</li>
-                    <li>Second item</li>
-                    <li>Third item</li>
-                </ul>
+                <!-- Empty content area for editing -->
             </div>
         </div>
     </div>
@@ -345,34 +497,90 @@
     <div class="status-bar">
         <div class="status-items">
             <span>Page 1 of 1</span>
-            <span>Words: 42</span>
+            <span>Words: 0</span>
         </div>
         <div class="status-items">
             <span>100%</span>
-            <span>English (US)</span>
+            <span><i class="fas fa-globe"></i> English (US)</span>
         </div>
     </div>
 
     <!-- Context Menu -->
     <div class="context-menu" id="context-menu">
-        <div class="context-menu-item" onclick="formatText('cut')">Cut</div>
-        <div class="context-menu-item" onclick="formatText('copy')">Copy</div>
-        <div class="context-menu-item" onclick="formatText('paste')">Paste</div>
-        <div class="context-menu-item" onclick="formatText('bold')">Bold</div>
-        <div class="context-menu-item" onclick="formatText('italic')">Italic</div>
-        <div class="context-menu-item" onclick="formatText('underline')">Underline</div>
+        <div class="context-menu-item" onclick="formatText('cut')"><i class="fas fa-cut"></i> Cut</div>
+        <div class="context-menu-item" onclick="formatText('copy')"><i class="fas fa-copy"></i> Copy</div>
+        <div class="context-menu-item" onclick="formatText('paste')"><i class="fas fa-paste"></i> Paste</div>
+        <div class="dropdown-divider"></div>
+        <div class="context-menu-item" onclick="formatText('bold')"><i class="fas fa-bold"></i> Bold</div>
+        <div class="context-menu-item" onclick="formatText('italic')"><i class="fas fa-italic"></i> Italic</div>
+        <div class="context-menu-item" onclick="formatText('underline')"><i class="fas fa-underline"></i> Underline</div>
     </div>
 
-    <!-- Color Picker -->
-    <div class="color-picker" id="color-picker">
-        <div class="color-option" style="background-color: #d85a1b;" onclick="setColor('#d85a1b')"></div>
-        <div class="color-option" style="background-color: #e0e0e0;" onclick="setColor('#e0e0e0')"></div>
-        <div class="color-option" style="background-color: #ff5555;" onclick="setColor('#ff5555')"></div>
-        <div class="color-option" style="background-color: #55ff55;" onclick="setColor('#55ff55')"></div>
-        <div class="color-option" style="background-color: #5555ff;" onclick="setColor('#5555ff')"></div>
-        <div class="color-option" style="background-color: #ffff55;" onclick="setColor('#ffff55')"></div>
-        <div class="color-option" style="background-color: #ff55ff;" onclick="setColor('#ff55ff')"></div>
-        <div class="color-option" style="background-color: #55ffff;" onclick="setColor('#55ffff')"></div>
+    <!-- Save Modal -->
+    <div class="modal" id="save-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Save Document</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="filename">File Name</label>
+                    <input type="text" id="filename" class="form-control" value="Document1">
+                </div>
+                <div class="form-group">
+                    <label for="fileformat">Format</label>
+                    <select id="fileformat" class="form-control">
+                        <option value="docx">Word Document (.docx)</option>
+                        <option value="pdf">PDF (.pdf)</option>
+                        <option value="txt">Plain Text (.txt)</option>
+                        <option value="html">Web Page (.html)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-save">Cancel</button>
+                <button class="btn btn-primary" id="confirm-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Modal -->
+    <div class="modal" id="print-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Print Document</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Print your document to a printer or save as PDF.</p>
+                <div class="form-group">
+                    <label for="printer">Printer</label>
+                    <select id="printer" class="form-control">
+                        <option value="pdf">Save as PDF</option>
+                        <option value="default">Default Printer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Pages</label>
+                    <div>
+                        <input type="radio" id="all-pages" name="pages" checked>
+                        <label for="all-pages">All</label>
+                        
+                        <input type="radio" id="current-page" name="pages">
+                        <label for="current-page">Current Page</label>
+                        
+                        <input type="radio" id="custom-pages" name="pages">
+                        <label for="custom-pages">Custom</label>
+                        <input type="text" placeholder="e.g., 1-3,5" class="form-control" style="margin-top: 5px;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-print">Cancel</button>
+                <button class="btn btn-primary" id="confirm-print">Print</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -380,6 +588,7 @@
         function formatText(command, value = null) {
             document.execCommand(command, false, value);
             document.getElementById('content').focus();
+            updateWordCount();
         }
 
         // Show context menu
@@ -405,38 +614,142 @@
             formatText('fontSize', this.value);
         });
 
-        // Color picker functionality
-        let currentColorCommand = null;
+        // Menu functionality
+        const menuItems = document.querySelectorAll('.menu-item');
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all menu items
+                menuItems.forEach(i => i.classList.remove('active'));
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Handle specific menu items
+                const tab = this.getAttribute('data-tab');
+                
+                if (tab === 'file') {
+                    const fileDropdown = document.getElementById('file-dropdown');
+                    // Toggle dropdown visibility
+                    const isVisible = fileDropdown.style.display === 'block';
+                    dropdowns.forEach(d => d.style.display = 'none');
+                    fileDropdown.style.display = isVisible ? 'none' : 'block';
+                    
+                    // Position the dropdown below the menu item
+                    const rect = this.getBoundingClientRect();
+                    fileDropdown.style.left = rect.left + 'px';
+                    fileDropdown.style.top = rect.bottom + 'px';
+                } else {
+                    // Hide all dropdowns when other menu items are clicked
+                    dropdowns.forEach(d => d.style.display = 'none');
+                }
+            });
+        });
 
-        function showColorPicker(command) {
-            currentColorCommand = command;
-            const picker = document.getElementById('color-picker');
-            picker.style.display = 'block';
-            picker.style.left = '50%';
-            picker.style.top = '50%';
-        }
-
-        function setColor(color) {
-            if (currentColorCommand) {
-                formatText(currentColorCommand, color);
-            }
-            document.getElementById('color-picker').style.display = 'none';
-        }
-
-        // Hide color picker when clicking elsewhere
+        // Hide dropdowns when clicking elsewhere
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.ribbon-button') && !e.target.closest('#color-picker')) {
-                document.getElementById('color-picker').style.display = 'none';
+            if (!e.target.closest('.menu-item') && !e.target.closest('.dropdown')) {
+                dropdowns.forEach(d => d.style.display = 'none');
             }
         });
 
-        // Word count update (simplified)
-        function updateWordCount() {
-            // This would normally count words in the document
+        // File dropdown actions
+        const fileActions = document.querySelectorAll('[data-action]');
+        fileActions.forEach(action => {
+            action.addEventListener('click', function() {
+                const actionType = this.getAttribute('data-action');
+                handleFileAction(actionType);
+            });
+        });
+
+        function handleFileAction(action) {
+            // Hide dropdown
+            dropdowns.forEach(d => d.style.display = 'none');
+            
+            switch(action) {
+                case 'new':
+                    if (confirm('Create a new document? Any unsaved changes will be lost.')) {
+                        document.getElementById('content').innerHTML = '';
+                        document.getElementById('current-document').textContent = 'Document1';
+                        updateWordCount();
+                    }
+                    break;
+                case 'open':
+                    // Simulate file open
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = '.txt,.html,.docx';
+                    fileInput.addEventListener('change', function() {
+                        if (this.files && this.files[0]) {
+                            const fileName = this.files[0].name;
+                            document.getElementById('current-document').textContent = fileName;
+                            alert('File "' + fileName + '" opened successfully (simulated).');
+                        }
+                    });
+                    fileInput.click();
+                    break;
+                case 'save':
+                case 'save-as':
+                    document.getElementById('save-modal').style.display = 'flex';
+                    break;
+                case 'print':
+                    document.getElementById('print-modal').style.display = 'flex';
+                    break;
+                case 'close':
+                    if (confirm('Close the document?')) {
+                        document.getElementById('content').innerHTML = '';
+                        document.getElementById('current-document').textContent = 'Document1';
+                        updateWordCount();
+                    }
+                    break;
+                default:
+                    alert(action + ' action triggered (simulated).');
+            }
         }
 
-        // Initialize editor focus
+        // Modal functionality
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close, .btn-secondary');
+        
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                modals.forEach(modal => modal.style.display = 'none');
+            });
+        });
+
+        // Save functionality
+        document.getElementById('confirm-save').addEventListener('click', function() {
+            const filename = document.getElementById('filename').value;
+            const format = document.getElementById('fileformat').value;
+            
+            document.getElementById('current-document').textContent = filename + '.' + format;
+            alert('Document saved as ' + filename + '.' + format + ' (simulated).');
+            document.getElementById('save-modal').style.display = 'none';
+        });
+
+        // Print functionality
+        document.getElementById('confirm-print').addEventListener('click', function() {
+            alert('Printing document (simulated).');
+            document.getElementById('print-modal').style.display = 'none';
+            
+            // Actual browser print would be:
+            // window.print();
+        });
+
+        // Word count update
+        function updateWordCount() {
+            const content = document.getElementById('content');
+            const text = content.innerText || '';
+            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            document.querySelector('.status-items span:nth-child(2)').textContent = `Words: ${wordCount}`;
+        }
+
+        // Update word count on input
+        document.getElementById('content').addEventListener('input', updateWordCount);
+
+        // Initialize editor focus and word count
         document.getElementById('content').focus();
+        updateWordCount();
     </script>
 </body>
 </html>
