@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word - Professional Document Editor</title>
+    <title>WordClone - Professional Document Editor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -25,8 +25,8 @@
         /* Back Button */
         .back-button {
             position: absolute;
-            top: 5px;
-            left: 5px;
+            top: 40px;
+            left: 10px;
             z-index: 3000;
             background-color: #152420;
             color: #d85a1b;
@@ -62,6 +62,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-left: 30px;
         }
 
         .document-name i {
@@ -233,17 +234,19 @@
         .page {
             width: 8.5in;
             min-height: 11in;
-            background-color: #23312a;
+            background-color: white;
             padding: 1in;
-            border: 1px solid #3a5545;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             position: relative;
+            color: black;
         }
 
         .page-content {
             min-height: 9in;
             outline: none;
+            color: black;
         }
 
         /* Status Bar */
@@ -359,6 +362,9 @@
         .modal-title {
             font-size: 18px;
             color: #d85a1b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .close {
@@ -486,6 +492,29 @@
             background: #d85a1b;
         }
 
+        /* Print styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .editor, .editor * {
+                visibility: visible;
+            }
+            .editor {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0;
+                background: white;
+            }
+            .page {
+                box-shadow: none;
+                margin: 0;
+                page-break-after: always;
+            }
+        }
+
         /* Responsive adjustments */
         @media (max-width: 1200px) {
             .ribbon {
@@ -528,13 +557,17 @@
             .status-items {
                 gap: 10px;
             }
+            
+            .back-button {
+                top: 70px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Back Button -->
     <a href="https://hencheng2.github.io/all/" class="back-button">
-        <i class="fas fa-arrow-left"></i> Back
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
     </a>
 
     <!-- Title Bar -->
@@ -750,9 +783,34 @@
                             <i class="fas fa-plus-square"></i>
                             <span class="ribbon-button-text">Blank Page</span>
                         </button>
-                        <button class="ribbon-button" title="Page Break" onclick="formatText('insertHorizontalRule')">
+                        <button class="ribbon-button" title="Page Break" onclick="insertPageBreak()">
                             <i class="fas fa-level-down-alt"></i>
                             <span class="ribbon-button-text">Page Break</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header & Footer -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">Header & Footer</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="Header" onclick="insertHeader()">
+                            <i class="fas fa-heading"></i>
+                            <span class="ribbon-button-text">Header</span>
+                        </button>
+                        <button class="ribbon-button" title="Footer" onclick="insertFooter()">
+                            <i class="fas fa-window-minimize"></i>
+                            <span class="ribbon-button-text">Footer</span>
+                        </button>
+                        <button class="ribbon-button" title="Page Number" onclick="insertPageNumber()">
+                            <i class="fas fa-list-ol"></i>
+                            <span class="ribbon-button-text">Page Number</span>
+                        </button>
+                        <button class="ribbon-button" title="Date & Time" onclick="insertDateTime()">
+                            <i class="fas fa-clock"></i>
+                            <span class="ribbon-button-text">Date & Time</span>
                         </button>
                     </div>
                 </div>
@@ -809,22 +867,18 @@
                 </div>
             </div>
 
-            <!-- Header & Footer -->
+            <!-- Symbols -->
             <div class="ribbon-section">
                 <div class="ribbon-group">
-                    <div class="ribbon-group-title">Header & Footer</div>
+                    <div class="ribbon-group-title">Symbols</div>
                     <div class="ribbon-buttons">
-                        <button class="ribbon-button" title="Header" onclick="insertHeader()">
-                            <i class="fas fa-heading"></i>
-                            <span class="ribbon-button-text">Header</span>
+                        <button class="ribbon-button" title="Equation" onclick="insertEquation()">
+                            <i class="fas fa-square-root-alt"></i>
+                            <span class="ribbon-button-text">Equation</span>
                         </button>
-                        <button class="ribbon-button" title="Footer" onclick="insertFooter()">
-                            <i class="fas fa-window-minimize"></i>
-                            <span class="ribbon-button-text">Footer</span>
-                        </button>
-                        <button class="ribbon-button" title="Page Number" onclick="insertPageNumber()">
-                            <i class="fas fa-list-ol"></i>
-                            <span class="ribbon-button-text">Page Number</span>
+                        <button class="ribbon-button" title="Symbol" onclick="showSymbolsMenu()">
+                            <i class="fas fa-integral"></i>
+                            <span class="ribbon-button-text">Symbol</span>
                         </button>
                     </div>
                 </div>
@@ -949,7 +1003,7 @@
     <div class="modal" id="table-grid-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Insert Table</h2>
+                <h2 class="modal-title"><i class="fas fa-table"></i> Insert Table</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
@@ -964,11 +1018,48 @@
         </div>
     </div>
 
+    <!-- Page Number Modal -->
+    <div class="modal" id="page-number-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-list-ol"></i> Page Numbers</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Position</label>
+                    <select id="page-number-position" class="form-control">
+                        <option value="top-right">Top of page (Right)</option>
+                        <option value="top-center">Top of page (Center)</option>
+                        <option value="top-left">Top of page (Left)</option>
+                        <option value="bottom-right">Bottom of page (Right)</option>
+                        <option value="bottom-center">Bottom of page (Center)</option>
+                        <option value="bottom-left">Bottom of page (Left)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Format</label>
+                    <select id="page-number-format" class="form-control">
+                        <option value="1">1, 2, 3, ...</option>
+                        <option value="a">a, b, c, ...</option>
+                        <option value="A">A, B, C, ...</option>
+                        <option value="i">i, ii, iii, ...</option>
+                        <option value="I">I, II, III, ...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-page-number">Cancel</button>
+                <button class="btn btn-primary" id="confirm-page-number">Insert</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Save Modal -->
     <div class="modal" id="save-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Save Document</h2>
+                <h2 class="modal-title"><i class="fas fa-save"></i> Save Document</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
@@ -1000,7 +1091,7 @@
     <div class="modal" id="print-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Print Document</h2>
+                <h2 class="modal-title"><i class="fas fa-print"></i> Print Document</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
@@ -1156,6 +1247,60 @@
             document.getElementById('page-count').textContent = `Page ${currentPage} of ${pageCount}`;
         }
 
+        // Insert page break
+        function insertPageBreak() {
+            formatText('insertHTML', '<div style="page-break-after: always;"><br></div>');
+        }
+
+        // Insert page numbers
+        function insertPageNumber() {
+            document.getElementById('page-number-modal').style.display = 'flex';
+        }
+
+        // Confirm page number insertion
+        document.getElementById('confirm-page-number').addEventListener('click', function() {
+            const position = document.getElementById('page-number-position').value;
+            const format = document.getElementById('page-number-format').value;
+            
+            let pageNumberHTML = '';
+            
+            switch(position) {
+                case 'top-right':
+                    pageNumberHTML = `<div style="position: absolute; top: 0.5in; right: 0.5in; text-align: right;">Page 1</div>`;
+                    break;
+                case 'top-center':
+                    pageNumberHTML = `<div style="position: absolute; top: 0.5in; left: 50%; transform: translateX(-50%); text-align: center;">Page 1</div>`;
+                    break;
+                case 'top-left':
+                    pageNumberHTML = `<div style="position: absolute; top: 0.5in; left: 0.5in; text-align: left;">Page 1</div>`;
+                    break;
+                case 'bottom-right':
+                    pageNumberHTML = `<div style="position: absolute; bottom: 0.5in; right: 0.5in; text-align: right;">Page 1</div>`;
+                    break;
+                case 'bottom-center':
+                    pageNumberHTML = `<div style="position: absolute; bottom: 0.5in; left: 50%; transform: translateX(-50%); text-align: center;">Page 1</div>`;
+                    break;
+                case 'bottom-left':
+                    pageNumberHTML = `<div style="position: absolute; bottom: 0.5in; left: 0.5in; text-align: left;">Page 1</div>`;
+                    break;
+            }
+            
+            formatText('insertHTML', pageNumberHTML);
+            document.getElementById('page-number-modal').style.display = 'none';
+        });
+
+        // Cancel page number insertion
+        document.getElementById('cancel-page-number').addEventListener('click', function() {
+            document.getElementById('page-number-modal').style.display = 'none';
+        });
+
+        // Insert date and time
+        function insertDateTime() {
+            const now = new Date();
+            const dateTimeStr = now.toLocaleString();
+            formatText('insertHTML', `<span>${dateTimeStr}</span>`);
+        }
+
         // Show context menu
         document.addEventListener('contextmenu', function(e) {
             if (e.target.closest('.page-content')) {
@@ -1268,23 +1413,26 @@
                         if (this.files && this.files[0]) {
                             const fileName = this.files[0].name;
                             document.getElementById('current-document').textContent = fileName.replace(/\.[^/.]+$/, ""); // Remove extension
-                            alert('File "' + fileName + '" opened successfully.');
                             
                             // In a real application, you would read the file content
                             const reader = new FileReader();
                             reader.onload = function(e) {
-                                document.getElementById('editor').innerHTML = `
-                                    <div class="page" id="page-1">
-                                        <div class="page-content" contenteditable="true" oninput="checkPageEnd(this)">${e.target.result}</div>
-                                    </div>
-                                `;
-                                pageCount = 1;
+                                // Clear existing pages
+                                document.getElementById('editor').innerHTML = '';
+                                
+                                // Create pages based on content
+                                const content = e.target.result;
+                                createPagesFromContent(content);
+                                
+                                pageCount = document.querySelectorAll('.page').length;
                                 currentPage = 1;
                                 updatePageCount();
                                 updateWordCount();
                                 history = [];
                                 historyIndex = -1;
                                 initEditor();
+                                
+                                alert('File "' + fileName + '" opened successfully.');
                             };
                             reader.readAsText(this.files[0]);
                         }
@@ -1332,6 +1480,20 @@
             }
         }
 
+        // Create pages from content
+        function createPagesFromContent(content) {
+            // This is a simplified version - in a real application, you would parse the content
+            // and distribute it across multiple pages based on content length
+            
+            // For demonstration, we'll just create one page with the content
+            const page = document.createElement('div');
+            page.className = 'page';
+            page.id = 'page-1';
+            page.innerHTML = `<div class="page-content" contenteditable="true" oninput="checkPageEnd(this)">${content}</div>`;
+            
+            document.getElementById('editor').appendChild(page);
+        }
+
         // Modal functionality
         const modals = document.querySelectorAll('.modal');
         const closeButtons = document.querySelectorAll('.close, .btn-secondary');
@@ -1368,11 +1530,9 @@
 
         // Print functionality
         document.getElementById('confirm-print').addEventListener('click', function() {
-            alert('Printing document.');
-            document.getElementById('print-modal').style.display = 'none';
-            
-            // Actual browser print would be:
+            // Use browser's print functionality
             window.print();
+            document.getElementById('print-modal').style.display = 'none';
         });
 
         // Table grid functionality
