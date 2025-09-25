@@ -24,8 +24,8 @@
 
         /* Back Button - Fixed positioning */
         .back-button {
-            position: fixed; /* Changed from absolute to fixed */
-            top: 10px; /* Adjusted to not overlap with toolbar */
+            position: fixed;
+            top: 10px;
             left: 10px;
             z-index: 3000;
             background-color: #152420;
@@ -54,7 +54,7 @@
             justify-content: space-between;
             padding: 0 8px;
             border-bottom: 1px solid #2a4a3c;
-            margin-top: 40px; /* Added margin to prevent overlap with back button */
+            margin-top: 40px;
         }
 
         .document-name {
@@ -248,7 +248,7 @@
             min-height: 9in;
             outline: none;
             color: black;
-            overflow: hidden; /* Prevent scrollbars that might affect height calculation */
+            overflow: hidden;
         }
 
         /* Status Bar */
@@ -564,6 +564,149 @@
                 top: 70px;
             }
         }
+
+        /* Shapes and Icons */
+        .shapes-grid, .icons-grid, .symbols-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 10px;
+            background-color: #2d3e33;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .shape-item, .icon-item, .symbol-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .shape-item:hover, .icon-item:hover, .symbol-item:hover {
+            background-color: #3a5545;
+        }
+
+        .shape-preview {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        .shape-name, .icon-name, .symbol-name {
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* Chart options */
+        .chart-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chart-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .chart-type:hover {
+            background-color: #3a5545;
+        }
+
+        .chart-preview {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Page setup options */
+        .page-setup-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .margin-option, .orientation-option, .size-option {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .margin-option:hover, .orientation-option:hover, .size-option:hover {
+            background-color: #3a5545;
+        }
+
+        /* Comment styling */
+        .comment {
+            background-color: #fffacd;
+            border-left: 3px solid #ffd700;
+            padding: 5px 10px;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .comment-author {
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .comment-date {
+            font-size: 10px;
+            color: #999;
+        }
+
+        .comment-content {
+            margin-top: 5px;
+        }
+
+        /* Equation editor */
+        .equation-editor {
+            background-color: #f5f5f5;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .equation-toolbar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .equation-symbol {
+            padding: 5px 10px;
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .equation-symbol:hover {
+            background-color: #d0d0d0;
+        }
+
+        .equation-preview {
+            min-height: 40px;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -635,7 +778,7 @@
                             <i class="fas fa-copy"></i>
                             <span class="ribbon-button-text">Copy</span>
                         </button>
-                        <button class="ribbon-button" title="Format Painter" onclick="alert('Format Painter activated. Click on text to apply formatting.')">
+                        <button class="ribbon-button" title="Format Painter" onclick="activateFormatPainter()">
                             <i class="fas fa-paint-brush"></i>
                             <span class="ribbon-button-text">Format Painter</span>
                         </button>
@@ -961,7 +1104,145 @@
             </div>
         </div>
 
-        <!-- Other tabs would be implemented similarly -->
+        <!-- Review Tab -->
+        <div class="ribbon-tab" id="review-tab">
+            <!-- Proofing -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">Proofing</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="Spelling & Grammar" onclick="checkSpelling()">
+                            <i class="fas fa-spell-check"></i>
+                            <span class="ribbon-button-text">Spelling</span>
+                        </button>
+                        <button class="ribbon-button" title="Thesaurus" onclick="showThesaurus()">
+                            <i class="fas fa-book"></i>
+                            <span class="ribbon-button-text">Thesaurus</span>
+                        </button>
+                        <button class="ribbon-button" title="Word Count" onclick="showWordCountDetails()">
+                            <i class="fas fa-calculator"></i>
+                            <span class="ribbon-button-text">Word Count</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">Comments</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="New Comment" onclick="insertComment()">
+                            <i class="fas fa-comment"></i>
+                            <span class="ribbon-button-text">New Comment</span>
+                        </button>
+                        <button class="ribbon-button" title="Delete Comment" onclick="deleteComment()">
+                            <i class="fas fa-trash"></i>
+                            <span class="ribbon-button-text">Delete</span>
+                        </button>
+                        <button class="ribbon-button" title="Previous Comment" onclick="navigateComment('previous')">
+                            <i class="fas fa-chevron-up"></i>
+                            <span class="ribbon-button-text">Previous</span>
+                        </button>
+                        <button class="ribbon-button" title="Next Comment" onclick="navigateComment('next')">
+                            <i class="fas fa-chevron-down"></i>
+                            <span class="ribbon-button-text">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">Tracking</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="Track Changes" onclick="toggleTrackChanges()">
+                            <i class="fas fa-pencil-alt"></i>
+                            <span class="ribbon-button-text">Track Changes</span>
+                        </button>
+                        <button class="ribbon-button" title="Show Markup" onclick="toggleShowMarkup()">
+                            <i class="fas fa-eye"></i>
+                            <span class="ribbon-button-text">Show Markup</span>
+                        </button>
+                        <button class="ribbon-button" title="Accept Change" onclick="acceptChange()">
+                            <i class="fas fa-check"></i>
+                            <span class="ribbon-button-text">Accept</span>
+                        </button>
+                        <button class="ribbon-button" title="Reject Change" onclick="rejectChange()">
+                            <i class="fas fa-times"></i>
+                            <span class="ribbon-button-text">Reject</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Tab -->
+        <div class="ribbon-tab" id="view-tab">
+            <!-- Views -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">Views</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="Print Layout" onclick="setView('print')">
+                            <i class="fas fa-print"></i>
+                            <span class="ribbon-button-text">Print Layout</span>
+                        </button>
+                        <button class="ribbon-button" title="Web Layout" onclick="setView('web')">
+                            <i class="fas fa-desktop"></i>
+                            <span class="ribbon-button-text">Web Layout</span>
+                        </button>
+                        <button class="ribbon-button" title="Read Mode" onclick="setView('read')">
+                            <i class="fas fa-book-open"></i>
+                            <span class="ribbon-button-text">Read Mode</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zoom -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">Zoom</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="Zoom In" onclick="zoomIn()">
+                            <i class="fas fa-search-plus"></i>
+                            <span class="ribbon-button-text">Zoom In</span>
+                        </button>
+                        <button class="ribbon-button" title="Zoom Out" onclick="zoomOut()">
+                            <i class="fas fa-search-minus"></i>
+                            <span class="ribbon-button-text">Zoom Out</span>
+                        </button>
+                        <button class="ribbon-button" title="100%" onclick="setZoom(100)">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <span class="ribbon-button-text">100%</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Show/Hide -->
+            <div class="ribbon-section">
+                <div class="ribbon-group">
+                    <div class="ribbon-group-title">Show</div>
+                    <div class="ribbon-buttons">
+                        <button class="ribbon-button" title="Ruler" onclick="toggleRuler()">
+                            <i class="fas fa-ruler"></i>
+                            <span class="ribbon-button-text">Ruler</span>
+                        </button>
+                        <button class="ribbon-button" title="Gridlines" onclick="toggleGridlines()">
+                            <i class="fas fa-th"></i>
+                            <span class="ribbon-button-text">Gridlines</span>
+                        </button>
+                        <button class="ribbon-button" title="Navigation Pane" onclick="toggleNavigationPane()">
+                            <i class="fas fa-bars"></i>
+                            <span class="ribbon-button-text">Navigation</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Ruler -->
@@ -983,9 +1264,9 @@
         <div class="status-items">
             <span id="page-count">Page 1 of 1</span>
             <span id="word-count">Words: 0</span>
+            <span id="zoom-level">Zoom: 100%</span>
         </div>
         <div class="status-items">
-            <span>100%</span>
             <span><i class="fas fa-globe"></i> English (US)</span>
         </div>
     </div>
@@ -1022,26 +1303,177 @@
         </div>
     </div>
 
-    <!-- File Upload Modal -->
-    <div class="modal" id="file-upload-modal">
+    <!-- Shapes Modal -->
+    <div class="modal" id="shapes-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title"><i class="fas fa-file-upload"></i> Upload Document</h2>
+                <h2 class="modal-title"><i class="fas fa-shapes"></i> Insert Shape</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="shapes-grid" id="shapes-grid">
+                    <!-- Shapes will be generated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('shapes-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icons Modal -->
+    <div class="modal" id="icons-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-icons"></i> Insert Icon</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="icons-grid" id="icons-grid">
+                    <!-- Icons will be generated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('icons-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Modal -->
+    <div class="modal" id="charts-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-chart-bar"></i> Insert Chart</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="chart-options" id="chart-options">
+                    <!-- Chart options will be generated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('charts-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="insertChart()">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Symbols Modal -->
+    <div class="modal" id="symbols-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-symbols"></i> Insert Symbol</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="symbols-grid" id="symbols-grid">
+                    <!-- Symbols will be generated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('symbols-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Equation Editor Modal -->
+    <div class="modal" id="equation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-square-root-alt"></i> Equation Editor</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="equation-editor">
+                    <div class="equation-toolbar" id="equation-toolbar">
+                        <!-- Equation symbols will be generated by JavaScript -->
+                    </div>
+                    <div class="equation-preview" id="equation-preview"></div>
+                    <div style="margin-top: 10px;">
+                        <input type="text" id="equation-input" class="form-control" placeholder="Type your equation here">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('equation-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="insertEquationFromEditor()">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Setup Modals -->
+    <div class="modal" id="margins-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-border-all"></i> Page Margins</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="page-setup-options">
+                    <div class="margin-option" onclick="setMargins('normal')">
+                        <strong>Normal</strong><br>
+                        <small>Top: 1", Bottom: 1", Left: 1", Right: 1"</small>
+                    </div>
+                    <div class="margin-option" onclick="setMargins('narrow')">
+                        <strong>Narrow</strong><br>
+                        <small>Top: 0.5", Bottom: 0.5", Left: 0.5", Right: 0.5"</small>
+                    </div>
+                    <div class="margin-option" onclick="setMargins('wide')">
+                        <strong>Wide</strong><br>
+                        <small>Top: 2", Bottom: 2", Left: 2", Right: 2"</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('margins-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="size-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-arrows-alt-h"></i> Page Size</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="page-setup-options">
+                    <div class="size-option" onclick="setPageSize('letter')">
+                        <strong>Letter</strong><br>
+                        <small>8.5" x 11"</small>
+                    </div>
+                    <div class="size-option" onclick="setPageSize('legal')">
+                        <strong>Legal</strong><br>
+                        <small>8.5" x 14"</small>
+                    </div>
+                    <div class="size-option" onclick="setPageSize('a4')">
+                        <strong>A4</strong><br>
+                        <small>8.27" x 11.69"</small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('size-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Modal -->
+    <div class="modal" id="comment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-comment"></i> Add Comment</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="file-input">Select a document to upload:</label>
-                    <input type="file" id="file-input" class="form-control" accept=".txt,.docx,.pdf">
-                </div>
-                <div class="form-group">
-                    <label for="file-content">Document Content:</label>
-                    <textarea id="file-content" class="form-control" rows="10" readonly></textarea>
+                    <label for="comment-text">Comment:</label>
+                    <textarea id="comment-text" class="form-control" rows="4"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('file-upload-modal')">Cancel</button>
-                <button class="btn btn-primary" onclick="insertUploadedContent()">Insert</button>
+                <button class="btn btn-secondary" onclick="closeModal('comment-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="insertCommentFromModal()">Add Comment</button>
             </div>
         </div>
     </div>
@@ -1055,6 +1487,16 @@
         let historyIndex = -1;
         let isTyping = false;
         let typingTimer;
+        let currentZoom = 100;
+        let formatPainterActive = false;
+        let formatPainterStyles = null;
+        let trackChanges = false;
+        let showMarkup = true;
+        let currentOrientation = 'portrait';
+        let currentPageSize = 'letter';
+        let currentMargins = 'normal';
+        let comments = [];
+        let currentCommentId = 1;
 
         // Initialize the editor
         document.addEventListener('DOMContentLoaded', function() {
@@ -1063,6 +1505,21 @@
             
             // Initialize table grid
             initTableGrid();
+            
+            // Initialize shapes
+            initShapes();
+            
+            // Initialize icons
+            initIcons();
+            
+            // Initialize charts
+            initCharts();
+            
+            // Initialize symbols
+            initSymbols();
+            
+            // Initialize equation editor
+            initEquationEditor();
             
             // Add event listeners for menu items
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -1086,6 +1543,14 @@
                 });
             });
             
+            // File dropdown actions
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    handleFileAction(action);
+                });
+            });
+            
             // Close dropdowns when clicking elsewhere
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.menu-item') && !e.target.closest('.dropdown')) {
@@ -1100,9 +1565,6 @@
                 });
             });
             
-            // File input change handler
-            document.getElementById('file-input').addEventListener('change', handleFileUpload);
-            
             // Context menu
             document.querySelector('.page-content').addEventListener('contextmenu', function(e) {
                 e.preventDefault();
@@ -1116,6 +1578,9 @@
             
             // Initialize word count
             updateWordCount();
+            
+            // Save initial state
+            saveState();
         });
 
         // Format text using document.execCommand
@@ -1183,11 +1648,59 @@
         // Show color picker
         function showColorPicker(type) {
             // In a real application, this would show a color picker
-            // For this demo, we'll just apply a default color
-            if (type === 'forecolor') {
-                formatText('foreColor', '#d85a1b');
-            } else if (type === 'backcolor') {
-                formatText('hiliteColor', '#3a5545');
+            // For this demo, we'll use a simple prompt
+            const color = prompt(`Enter a color for ${type}:`, type === 'forecolor' ? '#000000' : '#FFFF00');
+            if (color) {
+                formatText(type, color);
+            }
+        }
+
+        // Activate format painter
+        function activateFormatPainter() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const selectedElement = range.commonAncestorContainer.parentElement;
+                
+                if (selectedElement) {
+                    formatPainterStyles = {
+                        fontFamily: selectedElement.style.fontFamily,
+                        fontSize: selectedElement.style.fontSize,
+                        fontWeight: selectedElement.style.fontWeight,
+                        fontStyle: selectedElement.style.fontStyle,
+                        textDecoration: selectedElement.style.textDecoration,
+                        color: selectedElement.style.color,
+                        backgroundColor: selectedElement.style.backgroundColor
+                    };
+                    
+                    formatPainterActive = true;
+                    alert('Format painter activated. Click on text to apply formatting.');
+                    
+                    // Add click event to apply formatting
+                    document.querySelector('.page-content').addEventListener('click', applyFormatPainter, { once: true });
+                }
+            }
+        }
+
+        // Apply format painter styles
+        function applyFormatPainter() {
+            if (formatPainterActive && formatPainterStyles) {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    const selectedElement = range.commonAncestorContainer.parentElement;
+                    
+                    if (selectedElement) {
+                        Object.keys(formatPainterStyles).forEach(style => {
+                            if (formatPainterStyles[style]) {
+                                selectedElement.style[style] = formatPainterStyles[style];
+                            }
+                        });
+                    }
+                }
+                
+                formatPainterActive = false;
+                formatPainterStyles = null;
             }
         }
 
@@ -1259,6 +1772,73 @@
         // Hide file dropdown
         function hideFileDropdown() {
             document.getElementById('file-dropdown').style.display = 'none';
+        }
+
+        // Handle file actions
+        function handleFileAction(action) {
+            hideFileDropdown();
+            
+            switch(action) {
+                case 'new':
+                    if (confirm('Create a new document? Any unsaved changes will be lost.')) {
+                        document.getElementById('editor').innerHTML = `
+                            <div class="page" id="page-1">
+                                <div class="page-content" contenteditable="true" oninput="checkPageEnd(this)"></div>
+                            </div>
+                        `;
+                        totalPages = 1;
+                        currentPage = 1;
+                        document.getElementById('current-document').textContent = 'Document1';
+                        updatePageCount();
+                        updateWordCount();
+                        history = [];
+                        historyIndex = -1;
+                        document.querySelector('.page-content').focus();
+                    }
+                    break;
+                case 'new-template':
+                    showTemplateGallery();
+                    break;
+                case 'open':
+                    openFile();
+                    break;
+                case 'save':
+                case 'save-as':
+                    saveDocument();
+                    break;
+                case 'print':
+                    printDocument();
+                    break;
+                case 'share':
+                    shareDocument();
+                    break;
+                case 'export':
+                    exportDocument();
+                    break;
+                case 'close':
+                    if (confirm('Close the document?')) {
+                        document.getElementById('editor').innerHTML = `
+                            <div class="page" id="page-1">
+                                <div class="page-content" contenteditable="true" oninput="checkPageEnd(this)"></div>
+                            </div>
+                        `;
+                        totalPages = 1;
+                        currentPage = 1;
+                        document.getElementById('current-document').textContent = 'Document1';
+                        updatePageCount();
+                        updateWordCount();
+                        history = [];
+                        historyIndex = -1;
+                        document.querySelector('.page-content').focus();
+                    }
+                    break;
+                case 'account':
+                    showAccountDialog();
+                    break;
+                case 'options':
+                    showOptionsDialog();
+                    break;
+            }
         }
 
         // Show context menu
@@ -1344,58 +1924,638 @@
             updateWordCount();
         }
 
-        // Handle file upload
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        // Initialize shapes
+        function initShapes() {
+            const shapesGrid = document.getElementById('shapes-grid');
+            const shapes = [
+                { name: 'Rectangle', icon: 'fas fa-square' },
+                { name: 'Circle', icon: 'fas fa-circle' },
+                { name: 'Triangle', icon: 'fas fa-play fa-rotate-270' },
+                { name: 'Line', icon: 'fas fa-minus' },
+                { name: 'Arrow', icon: 'fas fa-arrow-right' },
+                { name: 'Star', icon: 'fas fa-star' },
+                { name: 'Heart', icon: 'fas fa-heart' },
+                { name: 'Cloud', icon: 'fas fa-cloud' }
+            ];
             
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                const content = e.target.result;
-                
-                // For text files, display content directly
-                if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-                    document.getElementById('file-content').value = content;
-                } 
-                // For other file types, show a message
-                else {
-                    document.getElementById('file-content').value = 
-                        `File: ${file.name}\nType: ${file.type || 'Unknown'}\nSize: ${file.size} bytes\n\n` +
-                        'Content preview is not available for this file type. Click "Insert" to add the file name to your document.';
-                }
-            };
-            
-            // Read the file based on its type
-            if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-                reader.readAsText(file);
-            } else {
-                // For non-text files, we'll just read as text to show basic info
-                reader.readAsText(file);
-            }
+            shapes.forEach(shape => {
+                const shapeItem = document.createElement('div');
+                shapeItem.className = 'shape-item';
+                shapeItem.innerHTML = `
+                    <div class="shape-preview">
+                        <i class="${shape.icon}"></i>
+                    </div>
+                    <div class="shape-name">${shape.name}</div>
+                `;
+                shapeItem.addEventListener('click', function() {
+                    insertShape(shape.name);
+                });
+                shapesGrid.appendChild(shapeItem);
+            });
         }
 
-        // Insert uploaded content
-        function insertUploadedContent() {
+        // Show shapes menu
+        function showShapesMenu() {
+            document.getElementById('shapes-modal').style.display = 'flex';
+        }
+
+        // Insert shape
+        function insertShape(shapeName) {
             saveState();
             
-            const content = document.getElementById('file-content').value;
-            if (content) {
-                document.execCommand('insertText', false, content);
+            let shapeHTML = '';
+            switch(shapeName) {
+                case 'Rectangle':
+                    shapeHTML = '<div style="width: 100px; height: 50px; background-color: #d85a1b; margin: 10px;"></div>';
+                    break;
+                case 'Circle':
+                    shapeHTML = '<div style="width: 50px; height: 50px; background-color: #d85a1b; border-radius: 50%; margin: 10px;"></div>';
+                    break;
+                case 'Triangle':
+                    shapeHTML = '<div style="width: 0; height: 0; border-left: 25px solid transparent; border-right: 25px solid transparent; border-bottom: 50px solid #d85a1b; margin: 10px;"></div>';
+                    break;
+                case 'Line':
+                    shapeHTML = '<div style="width: 100px; height: 2px; background-color: #d85a1b; margin: 10px;"></div>';
+                    break;
+                case 'Arrow':
+                    shapeHTML = '<div style="width: 100px; height: 20px; background-color: #d85a1b; margin: 10px; position: relative;">' +
+                                '<div style="width: 0; height: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 10px solid #d85a1b; position: absolute; right: -10px; top: 0;"></div></div>';
+                    break;
+                case 'Star':
+                    shapeHTML = '<div style="width: 50px; height: 50px; background-color: #d85a1b; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); margin: 10px;"></div>';
+                    break;
+                case 'Heart':
+                    shapeHTML = '<div style="width: 50px; height: 50px; background-color: #d85a1b; clip-path: path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"); margin: 10px;"></div>';
+                    break;
+                case 'Cloud':
+                    shapeHTML = '<div style="width: 80px; height: 40px; background-color: #d85a1b; border-radius: 40px; margin: 10px; position: relative;">' +
+                                '<div style="width: 40px; height: 40px; background-color: #d85a1b; border-radius: 50%; position: absolute; top: -20px; left: 10px;"></div>' +
+                                '<div style="width: 40px; height: 40px; background-color: #d85a1b; border-radius: 50%; position: absolute; top: -20px; right: 10px;"></div></div>';
+                    break;
             }
             
-            closeModal('file-upload-modal');
-            updateWordCount();
+            document.execCommand('insertHTML', false, shapeHTML);
+            closeModal('shapes-modal');
         }
 
-        // Show modal
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
+        // Initialize icons
+        function initIcons() {
+            const iconsGrid = document.getElementById('icons-grid');
+            const icons = [
+                { name: 'Smile', icon: 'fas fa-smile' },
+                { name: 'Check', icon: 'fas fa-check' },
+                { name: 'Info', icon: 'fas fa-info-circle' },
+                { name: 'Warning', icon: 'fas fa-exclamation-triangle' },
+                { name: 'Error', icon: 'fas fa-times-circle' },
+                { name: 'Calendar', icon: 'fas fa-calendar' },
+                { name: 'Clock', icon: 'fas fa-clock' },
+                { name: 'User', icon: 'fas fa-user' },
+                { name: 'Email', icon: 'fas fa-envelope' },
+                { name: 'Phone', icon: 'fas fa-phone' },
+                { name: 'Location', icon: 'fas fa-map-marker-alt' },
+                { name: 'Link', icon: 'fas fa-link' }
+            ];
+            
+            icons.forEach(icon => {
+                const iconItem = document.createElement('div');
+                iconItem.className = 'icon-item';
+                iconItem.innerHTML = `
+                    <div class="shape-preview">
+                        <i class="${icon.icon}"></i>
+                    </div>
+                    <div class="icon-name">${icon.name}</div>
+                `;
+                iconItem.addEventListener('click', function() {
+                    insertIcon(icon.icon);
+                });
+                iconsGrid.appendChild(iconItem);
+            });
         }
 
-        // Close modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+        // Show icons menu
+        function showIconsMenu() {
+            document.getElementById('icons-modal').style.display = 'flex';
+        }
+
+        // Insert icon
+        function insertIcon(iconClass) {
+            saveState();
+            document.execCommand('insertHTML', false, `<i class="${iconClass}" style="color: #d85a1b; font-size: 24px;"></i>`);
+            closeModal('icons-modal');
+        }
+
+        // Initialize charts
+        function initCharts() {
+            const chartOptions = document.getElementById('chart-options');
+            const chartTypes = [
+                { name: 'Bar Chart', icon: 'fas fa-chart-bar' },
+                { name: 'Line Chart', icon: 'fas fa-chart-line' },
+                { name: 'Pie Chart', icon: 'fas fa-chart-pie' },
+                { name: 'Area Chart', icon: 'fas fa-chart-area' }
+            ];
+            
+            chartTypes.forEach(chart => {
+                const chartType = document.createElement('div');
+                chartType.className = 'chart-type';
+                chartType.innerHTML = `
+                    <div class="chart-preview">
+                        <i class="${chart.icon}"></i>
+                    </div>
+                    <div>${chart.name}</div>
+                `;
+                chartType.addEventListener('click', function() {
+                    selectedChartType = chart.name;
+                });
+                chartOptions.appendChild(chartType);
+            });
+        }
+
+        // Show charts menu
+        function showChartsMenu() {
+            document.getElementById('charts-modal').style.display = 'flex';
+        }
+
+        // Insert chart
+        function insertChart() {
+            saveState();
+            
+            // Simple chart representation using HTML/CSS
+            let chartHTML = '';
+            switch(selectedChartType) {
+                case 'Bar Chart':
+                    chartHTML = '<div style="width: 300px; height: 200px; border: 1px solid #ccc; padding: 10px; display: flex; align-items: flex-end; gap: 10px;">' +
+                                '<div style="width: 40px; height: 80%; background-color: #d85a1b;"></div>' +
+                                '<div style="width: 40px; height: 60%; background-color: #3a5545;"></div>' +
+                                '<div style="width: 40px; height: 40%; background-color: #d85a1b;"></div>' +
+                                '<div style="width: 40px; height: 70%; background-color: #3a5545;"></div>' +
+                                '</div>';
+                    break;
+                case 'Line Chart':
+                    chartHTML = '<div style="width: 300px; height: 200px; border: 1px solid #ccc; padding: 10px; position: relative;">' +
+                                '<div style="width: 100%; height: 100%; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; position: relative;">' +
+                                '<div style="position: absolute; width: 100%; height: 2px; background-color: #d85a1b; top: 20%; left: 0; transform: translateY(-50%);"></div>' +
+                                '<div style="position: absolute; width: 100%; height: 2px; background-color: #d85a1b; top: 50%; left: 0; transform: translateY(-50%);"></div>' +
+                                '<div style="position: absolute; width: 100%; height: 2px; background-color: #d85a1b; top: 80%; left: 0; transform: translateY(-50%);"></div>' +
+                                '</div></div>';
+                    break;
+                case 'Pie Chart':
+                    chartHTML = '<div style="width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(#d85a1b 0% 40%, #3a5545 40% 70%, #2d3e33 70% 100%); margin: 10px;"></div>';
+                    break;
+                case 'Area Chart':
+                    chartHTML = '<div style="width: 300px; height: 200px; border: 1px solid #ccc; padding: 10px; position: relative;">' +
+                                '<div style="width: 100%; height: 100%; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc; position: relative;">' +
+                                '<div style="position: absolute; width: 100%; height: 60%; background: linear-gradient(to top, rgba(216, 90, 27, 0.3), rgba(216, 90, 27, 0.1)); bottom: 0; left: 0;"></div>' +
+                                '</div></div>';
+                    break;
+            }
+            
+            document.execCommand('insertHTML', false, chartHTML);
+            closeModal('charts-modal');
+        }
+
+        // Initialize symbols
+        function initSymbols() {
+            const symbolsGrid = document.getElementById('symbols-grid');
+            const symbols = [
+                { name: 'Copyright', symbol: '©' },
+                { name: 'Registered', symbol: '®' },
+                { name: 'Trademark', symbol: '™' },
+                { name: 'Euro', symbol: '€' },
+                { name: 'Pound', symbol: '£' },
+                { name: 'Yen', symbol: '¥' },
+                { name: 'Cent', symbol: '¢' },
+                { name: 'Degree', symbol: '°' },
+                { name: 'Plus/Minus', symbol: '±' },
+                { name: 'Paragraph', symbol: '¶' },
+                { name: 'Section', symbol: '§' },
+                { name: 'Bullet', symbol: '•' }
+            ];
+            
+            symbols.forEach(symbol => {
+                const symbolItem = document.createElement('div');
+                symbolItem.className = 'symbol-item';
+                symbolItem.innerHTML = `
+                    <div class="shape-preview" style="font-size: 24px;">
+                        ${symbol.symbol}
+                    </div>
+                    <div class="symbol-name">${symbol.name}</div>
+                `;
+                symbolItem.addEventListener('click', function() {
+                    insertSymbol(symbol.symbol);
+                });
+                symbolsGrid.appendChild(symbolItem);
+            });
+        }
+
+        // Show symbols menu
+        function showSymbolsMenu() {
+            document.getElementById('symbols-modal').style.display = 'flex';
+        }
+
+        // Insert symbol
+        function insertSymbol(symbol) {
+            saveState();
+            document.execCommand('insertText', false, symbol);
+            closeModal('symbols-modal');
+        }
+
+        // Initialize equation editor
+        function initEquationEditor() {
+            const equationToolbar = document.getElementById('equation-toolbar');
+            const equationSymbols = [
+                { symbol: '√', name: 'Square Root' },
+                { symbol: '∫', name: 'Integral' },
+                { symbol: '∑', name: 'Summation' },
+                { symbol: '∞', name: 'Infinity' },
+                { symbol: '≠', name: 'Not Equal' },
+                { symbol: '≤', name: 'Less Than or Equal' },
+                { symbol: '≥', name: 'Greater Than or Equal' },
+                { symbol: '±', name: 'Plus/Minus' },
+                { symbol: '÷', name: 'Division' },
+                { symbol: '×', name: 'Multiplication' },
+                { symbol: 'α', name: 'Alpha' },
+                { symbol: 'β', name: 'Beta' }
+            ];
+            
+            equationSymbols.forEach(eqSymbol => {
+                const symbolElement = document.createElement('span');
+                symbolElement.className = 'equation-symbol';
+                symbolElement.textContent = eqSymbol.symbol;
+                symbolElement.title = eqSymbol.name;
+                symbolElement.addEventListener('click', function() {
+                    document.getElementById('equation-input').value += eqSymbol.symbol;
+                    updateEquationPreview();
+                });
+                equationToolbar.appendChild(symbolElement);
+            });
+            
+            // Update preview when input changes
+            document.getElementById('equation-input').addEventListener('input', updateEquationPreview);
+        }
+
+        // Update equation preview
+        function updateEquationPreview() {
+            const equation = document.getElementById('equation-input').value;
+            document.getElementById('equation-preview').textContent = equation;
+        }
+
+        // Show equation editor
+        function insertEquation() {
+            document.getElementById('equation-modal').style.display = 'flex';
+            document.getElementById('equation-input').value = '';
+            updateEquationPreview();
+        }
+
+        // Insert equation from editor
+        function insertEquationFromEditor() {
+            saveState();
+            const equation = document.getElementById('equation-input').value;
+            document.execCommand('insertHTML', false, `<span style="font-size: 18px; font-family: 'Times New Roman', serif;">${equation}</span>`);
+            closeModal('equation-modal');
+        }
+
+        // Show margins menu
+        function showMarginsMenu() {
+            document.getElementById('margins-modal').style.display = 'flex';
+        }
+
+        // Set margins
+        function setMargins(marginType) {
+            currentMargins = marginType;
+            alert(`Page margins set to ${marginType}`);
+            closeModal('margins-modal');
+        }
+
+        // Toggle orientation
+        function toggleOrientation() {
+            currentOrientation = currentOrientation === 'portrait' ? 'landscape' : 'portrait';
+            alert(`Page orientation set to ${currentOrientation}`);
+        }
+
+        // Show page size menu
+        function showPageSizeMenu() {
+            document.getElementById('size-modal').style.display = 'flex';
+        }
+
+        // Set page size
+        function setPageSize(size) {
+            currentPageSize = size;
+            alert(`Page size set to ${size}`);
+            closeModal('size-modal');
+        }
+
+        // Insert cover page
+        function insertCoverPage() {
+            saveState();
+            const coverHTML = `
+                <div style="text-align: center; padding: 2in 0;">
+                    <h1 style="font-size: 36px; color: #d85a1b;">Document Title</h1>
+                    <p style="font-size: 18px;">Document Subtitle</p>
+                    <p style="margin-top: 2in;">Author Name</p>
+                    <p>Date: ${new Date().toLocaleDateString()}</p>
+                </div>
+                <hr>
+            `;
+            document.execCommand('insertHTML', false, coverHTML);
+        }
+
+        // Insert blank page
+        function insertBlankPage() {
+            createNewPage();
+        }
+
+        // Insert page break
+        function insertPageBreak() {
+            saveState();
+            document.execCommand('insertHTML', false, '<div style="page-break-after: always;"></div>');
+        }
+
+        // Insert header
+        function insertHeader() {
+            saveState();
+            const headerHTML = `
+                <div style="position: absolute; top: 0.5in; left: 1in; right: 1in; text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                    <strong>Document Header</strong>
+                </div>
+            `;
+            document.execCommand('insertHTML', false, headerHTML);
+        }
+
+        // Insert footer
+        function insertFooter() {
+            saveState();
+            const footerHTML = `
+                <div style="position: absolute; bottom: 0.5in; left: 1in; right: 1in; text-align: center; border-top: 1px solid #ccc; padding-top: 10px;">
+                    <strong>Document Footer</strong>
+                </div>
+            `;
+            document.execCommand('insertHTML', false, footerHTML);
+        }
+
+        // Insert page number
+        function insertPageNumber() {
+            saveState();
+            document.execCommand('insertHTML', false, `<span style="position: absolute; bottom: 0.5in; right: 1in;">Page ${currentPage}</span>`);
+        }
+
+        // Insert date and time
+        function insertDateTime() {
+            saveState();
+            const now = new Date();
+            document.execCommand('insertText', false, now.toLocaleString());
+        }
+
+        // Insert image
+        function insertImage() {
+            saveState();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.execCommand('insertHTML', false, `<img src="${e.target.result}" style="max-width: 100%;">`);
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            };
+            input.click();
+        }
+
+        // Insert comment
+        function insertComment() {
+            document.getElementById('comment-modal').style.display = 'flex';
+            document.getElementById('comment-text').value = '';
+        }
+
+        // Insert comment from modal
+        function insertCommentFromModal() {
+            saveState();
+            const commentText = document.getElementById('comment-text').value;
+            if (commentText) {
+                const commentId = currentCommentId++;
+                const commentHTML = `
+                    <div class="comment" data-comment-id="${commentId}">
+                        <div class="comment-author">User</div>
+                        <div class="comment-date">${new Date().toLocaleString()}</div>
+                        <div class="comment-content">${commentText}</div>
+                    </div>
+                `;
+                document.execCommand('insertHTML', false, commentHTML);
+                comments.push({ id: commentId, text: commentText });
+                closeModal('comment-modal');
+            }
+        }
+
+        // Delete comment
+        function deleteComment() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const selectedElement = range.commonAncestorContainer.parentElement;
+                
+                if (selectedElement && selectedElement.classList.contains('comment')) {
+                    selectedElement.remove();
+                    updateWordCount();
+                } else {
+                    alert('Please select a comment to delete.');
+                }
+            }
+        }
+
+        // Navigate comments
+        function navigateComment(direction) {
+            if (comments.length === 0) {
+                alert('No comments found.');
+                return;
+            }
+            
+            // This is a simplified implementation
+            // In a real application, you would track the current comment and navigate to the next/previous one
+            alert(`Navigating to ${direction} comment`);
+        }
+
+        // Toggle track changes
+        function toggleTrackChanges() {
+            trackChanges = !trackChanges;
+            alert(`Track Changes ${trackChanges ? 'enabled' : 'disabled'}`);
+        }
+
+        // Toggle show markup
+        function toggleShowMarkup() {
+            showMarkup = !showMarkup;
+            alert(`Show Markup ${showMarkup ? 'enabled' : 'disabled'}`);
+        }
+
+        // Accept change
+        function acceptChange() {
+            // In a real application, this would accept a tracked change
+            alert('Change accepted');
+        }
+
+        // Reject change
+        function rejectChange() {
+            // In a real application, this would reject a tracked change
+            alert('Change rejected');
+        }
+
+        // Check spelling
+        function checkSpelling() {
+            // Simple spelling check implementation
+            const content = document.querySelector('.page-content').textContent;
+            const words = content.split(/\s+/);
+            let misspelledWords = [];
+            
+            // Simple dictionary of common words
+            const dictionary = ['the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'can', 'her', 'was', 'one', 'our', 'out', 'day', 'get', 'has', 'him', 'his', 'how'];
+            
+            words.forEach(word => {
+                const cleanWord = word.replace(/[^a-zA-Z]/g, '').toLowerCase();
+                if (cleanWord.length > 2 && !dictionary.includes(cleanWord)) {
+                    misspelledWords.push(word);
+                }
+            });
+            
+            if (misspelledWords.length > 0) {
+                alert(`Potential spelling issues found: ${misspelledWords.join(', ')}`);
+            } else {
+                alert('No spelling errors found.');
+            }
+        }
+
+        // Show thesaurus
+        function showThesaurus() {
+            const selection = window.getSelection();
+            const selectedWord = selection.toString();
+            
+            if (selectedWord) {
+                // Simple thesaurus implementation
+                const thesaurus = {
+                    'good': ['excellent', 'great', 'superb', 'fine', 'nice'],
+                    'bad': ['poor', 'terrible', 'awful', 'horrible', 'dreadful'],
+                    'big': ['large', 'huge', 'enormous', 'massive', 'gigantic'],
+                    'small': ['tiny', 'little', 'miniature', 'petite', 'compact']
+                };
+                
+                const synonyms = thesaurus[selectedWord.toLowerCase()];
+                if (synonyms) {
+                    alert(`Synonyms for "${selectedWord}": ${synonyms.join(', ')}`);
+                } else {
+                    alert(`No synonyms found for "${selectedWord}".`);
+                }
+            } else {
+                alert('Please select a word to look up in the thesaurus.');
+            }
+        }
+
+        // Show word count details
+        function showWordCountDetails() {
+            const content = document.querySelector('.page-content').textContent;
+            const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+            const characters = content.length;
+            const charactersNoSpaces = content.replace(/\s/g, '').length;
+            const paragraphs = document.querySelectorAll('.page-content p').length;
+            
+            alert(`Word Count Details:\n\nWords: ${words}\nCharacters: ${characters}\nCharacters (no spaces): ${charactersNoSpaces}\nParagraphs: ${paragraphs}`);
+        }
+
+        // Set view
+        function setView(view) {
+            alert(`View changed to ${view} layout`);
+        }
+
+        // Zoom in
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom + 10, 200);
+            document.getElementById('zoom-level').textContent = `Zoom: ${currentZoom}%`;
+            document.querySelector('.editor').style.transform = `scale(${currentZoom / 100})`;
+        }
+
+        // Zoom out
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom - 10, 50);
+            document.getElementById('zoom-level').textContent = `Zoom: ${currentZoom}%`;
+            document.querySelector('.editor').style.transform = `scale(${currentZoom / 100})`;
+        }
+
+        // Set zoom
+        function setZoom(zoom) {
+            currentZoom = zoom;
+            document.getElementById('zoom-level').textContent = `Zoom: ${currentZoom}%`;
+            document.querySelector('.editor').style.transform = `scale(${currentZoom / 100})`;
+        }
+
+        // Toggle ruler
+        function toggleRuler() {
+            const ruler = document.querySelector('.ruler');
+            ruler.style.display = ruler.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        // Toggle gridlines
+        function toggleGridlines() {
+            const editor = document.querySelector('.editor');
+            editor.style.backgroundImage = editor.style.backgroundImage ? '' : 'linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)';
+            editor.style.backgroundSize = '20px 20px';
+        }
+
+        // Toggle navigation pane
+        function toggleNavigationPane() {
+            alert('Navigation pane toggled');
+        }
+
+        // Adjust indent
+        function adjustIndent(direction) {
+            saveState();
+            if (direction === 'increase') {
+                formatText('indent');
+            } else {
+                formatText('outdent');
+            }
+        }
+
+        // Adjust spacing
+        function adjustSpacing(type) {
+            saveState();
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const selectedElement = range.commonAncestorContainer.parentElement;
+                
+                if (selectedElement) {
+                    const currentMargin = parseInt(selectedElement.style.marginTop) || 0;
+                    if (type === 'before') {
+                        selectedElement.style.marginTop = `${currentMargin + 10}px`;
+                    } else {
+                        selectedElement.style.marginBottom = `${currentMargin + 10}px`;
+                    }
+                }
+            }
+        }
+
+        // Arrange object
+        function arrangeObject(direction) {
+            saveState();
+            alert(`Object moved ${direction}`);
+        }
+
+        // Toggle text wrap
+        function toggleTextWrap() {
+            saveState();
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const selectedElement = range.commonAncestorContainer.parentElement;
+                
+                if (selectedElement && selectedElement.tagName === 'IMG') {
+                    selectedElement.style.float = selectedElement.style.float === 'left' ? 'right' : 'left';
+                }
+            }
+        }
+
+        // Show align menu
+        function showAlignMenu() {
+            alert('Align menu would show alignment options');
         }
 
         // Save state for undo/redo
@@ -1429,115 +2589,69 @@
             }
         }
 
-        // Insert functions for various elements
-        function insertCoverPage() {
-            saveState();
-            alert('Cover page template would be inserted here in a full implementation.');
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
-        function insertBlankPage() {
-            createNewPage();
+        // Update page count
+        function updatePageCount() {
+            document.getElementById('page-count').textContent = `Page ${currentPage} of ${totalPages}`;
         }
 
-        function insertPageBreak() {
-            saveState();
-            document.execCommand('insertHTML', false, '<div style="page-break-after: always;"></div>');
-            updateWordCount();
+        // File operations (simplified implementations)
+        function showTemplateGallery() {
+            alert('Template gallery would open here');
         }
 
-        function insertHeader() {
-            saveState();
-            alert('Header would be inserted here in a full implementation.');
+        function openFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt,.html';
+            input.onchange = function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.querySelector('.page-content').innerHTML = e.target.result;
+                        updateWordCount();
+                    };
+                    reader.readAsText(this.files[0]);
+                }
+            };
+            input.click();
         }
 
-        function insertFooter() {
-            saveState();
-            alert('Footer would be inserted here in a full implementation.');
+        function saveDocument() {
+            const content = document.querySelector('.page-content').innerHTML;
+            const blob = new Blob([content], {type: 'text/html'});
+            const a = document.createElement('a');
+            a.download = 'document.html';
+            a.href = URL.createObjectURL(blob);
+            a.click();
         }
 
-        function insertPageNumber() {
-            saveState();
-            document.execCommand('insertText', false, `[Page ${currentPage}]`);
-            updateWordCount();
+        function printDocument() {
+            window.print();
         }
 
-        function insertDateTime() {
-            saveState();
-            const now = new Date();
-            document.execCommand('insertText', false, now.toLocaleString());
-            updateWordCount();
+        function shareDocument() {
+            alert('Share options would appear here');
         }
 
-        function insertImage() {
-            saveState();
-            alert('Image insertion dialog would open here in a full implementation.');
+        function exportDocument() {
+            alert('Export options would appear here');
         }
 
-        function showShapesMenu() {
-            alert('Shapes menu would open here in a full implementation.');
+        function showAccountDialog() {
+            alert('Account management would open here');
         }
 
-        function showIconsMenu() {
-            alert('Icons menu would open here in a full implementation.');
+        function showOptionsDialog() {
+            alert('Options dialog would open here');
         }
 
-        function showChartsMenu() {
-            alert('Charts menu would open here in a full implementation.');
-        }
-
-        function insertComment() {
-            saveState();
-            alert('Comment insertion would occur here in a full implementation.');
-        }
-
-        function insertEquation() {
-            saveState();
-            alert('Equation editor would open here in a full implementation.');
-        }
-
-        function showSymbolsMenu() {
-            alert('Symbols menu would open here in a full implementation.');
-        }
-
-        function showMarginsMenu() {
-            alert('Margins menu would open here in a full implementation.');
-        }
-
-        function toggleOrientation() {
-            alert('Page orientation would be toggled here in a full implementation.');
-        }
-
-        function showPageSizeMenu() {
-            alert('Page size menu would open here in a full implementation.');
-        }
-
-        function adjustIndent(direction) {
-            saveState();
-            if (direction === 'increase') {
-                formatText('indent');
-            } else {
-                formatText('outdent');
-            }
-        }
-
-        function adjustSpacing(type) {
-            saveState();
-            alert(`${type} spacing would be adjusted here in a full implementation.`);
-        }
-
-        function arrangeObject(direction) {
-            saveState();
-            alert(`Object would be moved ${direction} here in a full implementation.`);
-        }
-
-        function toggleTextWrap() {
-            saveState();
-            alert('Text wrap would be toggled here in a full implementation.');
-        }
-
-        function showAlignMenu() {
-            alert('Align menu would open here in a full implementation.');
-        }
+        // Global variable for chart type
+        let selectedChartType = 'Bar Chart';
     </script>
 </body>
 </html>
